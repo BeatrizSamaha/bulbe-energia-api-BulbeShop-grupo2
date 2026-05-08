@@ -15,7 +15,7 @@ export const login = (req, res) => {
     }
 
     //Buscar email
-    const usuario = usuario.find((u) => u.email === email);
+    const usuario = usuarios.find((u) => u.email === email);
 
     //verificar usuario e senha
     if (!usuario || usuario.senha !== senha) {
@@ -36,7 +36,7 @@ export const login = (req, res) => {
 
     //Retornar o token ao cliente
     return res.status(200).json({
-        mensagem: "Autentificação realizada com sucesso.",
+        mensagem: "Autenticação realizada com sucesso.",
         token,
         expira_em: JWT_EXPIRES_IN,
     });
