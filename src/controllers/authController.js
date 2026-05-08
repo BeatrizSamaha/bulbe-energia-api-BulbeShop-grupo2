@@ -24,5 +24,20 @@ export const login = (req, res) => {
         });
     }
 
-    
+    //payload
+    const payload = {
+        sub: usuario.id,
+        nome: usuario.nome,
+        papel: usuario.papel,
+    };
+
+    //Gerar o token JWT
+    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+
+    //Retornar o token ao cliente
+    return res.status(200).json({
+        mensagem: "Autentificação realizada com sucesso.",
+        token,
+        expira_em: JWT_EXPIRES_IN,
+    });
 };
