@@ -19,3 +19,16 @@ export const listarProdutos = (req, res) => {
   }
 };
 
+export const buscarProdutoPorId = (req, res) => {
+  try {
+    const produto = produtos.find((p) => p.id === Number(req.params.id));
+ 
+    if (!produto) {
+      return res.status(404).json({ erro: 'Produto não encontrado.' });
+    }
+ 
+    res.status(200).json(produto);
+  } catch (error) {
+    res.status(500).json({ erro: 'Erro interno ao buscar produto' });
+  }
+};
