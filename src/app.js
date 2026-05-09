@@ -38,6 +38,10 @@ import authRouter from './routes/auth.js';
 
 app.use('/api/v1/auth', authRouter);
 
+import produtosRouter from './routes/produtos.js';
+
+app.use('/api/v1/produtos', produtosRouter);
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
