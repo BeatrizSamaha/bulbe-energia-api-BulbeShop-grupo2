@@ -1,5 +1,6 @@
 import { Router } from 'express';
-import { listarProdutos } from '../controllers/produtosController.js';
+import { listarProdutos, buscarProdutoPorId } from '../controllers/produtosController.js';
+import { autenticar } from '../middlewares/autenticar.js';
 
 const router = Router();
 
@@ -13,22 +14,22 @@ const router = Router();
  *         id:
  *           type: integer
  *           example: 1
- *         nome:
+ *         title:
  *           type: string
  *           example: 'Lâmpada LED 9W'
- *         descricao:
+ *         description:
  *           type: string
  *           example: 'Lâmpada LED de alta eficiência energética, luz branca neutra.'
- *         preco:
+ *         price:
  *           type: number
  *           example: 18.90
- *         categoria:
+ *         category:
  *           type: string
  *           example: 'Iluminação'
- *         estoque:
+ *         stock:
  *           type: integer
  *           example: 150
- *         imagem:
+ *         image:
  *           type: string
  *           example: 'lampada-led-9w.jpg'
  *
@@ -43,6 +44,8 @@ const router = Router();
  *         name: busca
  *         schema:
  *           type: string
+ *           description: Filtrar produtos por termo de busca no título
+ *           example: lampada
  *     responses:
  *       '200':
  *         description: Sucesso. Retorna a lista de produtos.
@@ -58,5 +61,6 @@ const router = Router();
  *         description: Erro interno do servidor.
  */
 router.get('/', listarProdutos);
-
+router.get('/:id', autenticar, buscarProdutoPorId);
+ 
 export default router;
