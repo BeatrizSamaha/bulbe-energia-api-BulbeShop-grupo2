@@ -1,6 +1,6 @@
-import { Router } from 'express';
-import { listarLojas } from '../controllers/lojasController.js';
-import { autenticar } from '../middlewares/autenticar.js';
+import { Router } from "express";
+import { listarLojas } from "../controllers/lojasController.js";
+import { autenticar } from "../middlewares/autenticar.js";
 
 const router = Router();
 
@@ -28,7 +28,7 @@ const router = Router();
  *     summary: Lista todas as lojas parceiras
  *     tags: [Lojas]
  *     security:
- *       - bearerAuth: [] 
+ *       - bearerAuth: []
  *     responses:
  *       '200':
  *         description: Sucesso. Retorna a lista de lojas.
@@ -42,6 +42,6 @@ const router = Router();
  *         description: Não autorizado. Token ausente ou inválido.
  */
 // Rota protegida
-router.get('/', autenticar, listarLojas);
+router.get("/", autenticar, listarLojas);
 
 export default router;
