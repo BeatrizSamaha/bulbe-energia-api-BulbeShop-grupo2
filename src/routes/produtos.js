@@ -31,14 +31,18 @@ const router = Router();
  *         imagem:
  *           type: string
  *           example: 'lampada-led-9w.jpg'
- *         destaque:
- *           type: boolean
- *           example: true
  *
  * /api/v1/produtos:
  *   get:
  *     summary: Lista todos os produtos da página inicial
  *     tags: [Produtos]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: busca
+ *         schema:
+ *           type: string
  *     responses:
  *       '200':
  *         description: Sucesso. Retorna a lista de produtos.
@@ -48,6 +52,8 @@ const router = Router();
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Produto'
+ *       '401':
+ *         description: Não autorizado. Token ausente ou inválido.
  *       '500':
  *         description: Erro interno do servidor.
  */
