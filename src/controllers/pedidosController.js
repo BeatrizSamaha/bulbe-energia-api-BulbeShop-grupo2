@@ -5,7 +5,7 @@ export const buscarPedidoPorId = (req, res) => {
 
     const usuarioLogadoId = req.usuario?.id;
 
-    const pedido = pedidos.find(p => p.id === Number(id));
+    const pedido = pedidos.find((p) => p.id === Number(id));
 
     // Validação: EXISTE
     if (!pedido) {
@@ -14,9 +14,11 @@ export const buscarPedidoPorId = (req, res) => {
 
     // Validação: Pedido é do Usuário
     if (pedido.usuarioId !== Number(usuarioLogadoId)) {
-        return res.status(403).json({ mensagem: "Acesso negado: este pedido não pertence a você" });
+        return res.status(403).json({
+            mensagem: "Acesso negado: este pedido não pertence a você",
+        });
     }
 
     // Sucesso
     return res.status(200).json(pedido);
-}
+};
