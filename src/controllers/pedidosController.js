@@ -22,3 +22,24 @@ export const buscarPedidoPorId = (req, res) => {
     // Sucesso
     return res.status(200).json(pedido);
 };
+
+export const listarPedidos = (req, res) => {
+    try {
+        // req.usuario.id vem do seu middleware 'autenticar'
+        const usuarioId = req.usuario.id;
+
+        // Filtramos a base para retornar apenas o que pertence ao usuário logado
+        const meusPedidos = pedidos.filter((p) => p.usuarioId === usuarioId);
+
+        //ordena por data
+        const pedidosOrdenados = meusPedidos.sort(
+            (a, b) => new Date(b.data) - new Date(a.data),
+        );
+
+        res.status(200).json(meusPedidos);
+    } catch (error) {
+        res.status(500).json({
+            mensagem: "Erro ao buscar histórico de pedidos.",
+        });
+    }
+};
