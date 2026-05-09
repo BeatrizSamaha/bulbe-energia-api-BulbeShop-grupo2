@@ -34,20 +34,24 @@ const router = Router();
  *                   example: 1
  *                 usuarioId:
  *                   type: integer
- *                   example: 101
+ *                   example: 1
  *                 data:
  *                   type: string
  *                   format: date-time
- *                   example: "2026-05-09T14:30:00Z"
+ *                   example: "2026-05-01T10:00:00Z"
  *                 status:
  *                   type: string
  *                   enum:
  *                     - ativo
  *                     - concluido
  *                     - cancelado
- *                   example: "ativo"
+ *                   example: "concluido"
  *                 metodoPagamento:
  *                   type: string
+ *                   enum:
+ *                     - cartao_credito
+ *                     - pix
+ *                     - boleto
  *                   example: "cartao_credito"
  *                 itens:
  *                   type: array
@@ -56,25 +60,29 @@ const router = Router();
  *                     properties:
  *                       produtoId:
  *                         type: integer
- *                         example: 50
- *                       nome:
+ *                         example: 1
+ *                       title:
  *                         type: string
- *                         example: "Teclado Gamer"
+ *                         example: "Lâmpada LED 9W"
  *                       quantidade:
  *                         type: integer
- *                         example: 1
- *                       precoUnitario:
+ *                         example: 2
+ *                       price:
  *                         type: number
- *                         example: 250.00
+ *                         format: float
+ *                         example: 18.90
  *                 subtotal:
  *                   type: number
- *                   example: 250.00
+ *                   format: float
+ *                   example: 37.80
  *                 desconto:
  *                   type: number
+ *                   format: float
  *                   example: 0.00
  *                 total:
  *                   type: number
- *                   example: 250.00
+ *                   format: float
+ *                   example: 37.80
  *                 cupom:
  *                   type: string
  *                   nullable: true
