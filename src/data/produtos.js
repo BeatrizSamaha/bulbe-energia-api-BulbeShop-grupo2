@@ -2,11 +2,13 @@ export const produtos = [
   {
     id: 1,
     title: 'Lâmpada LED 9W',
-    description: 'Lâmpada LED de alta eficiência energética, luz branca fria.',
+    description: 'Lâmpada LED de alta eficiência energética, luz branca.',
     price: 18.90,
     category: 'Iluminação',
     stock: 150,
     image: 'lampada-led-9w.jpg',
+    rating: 4.5,
+    variations: ['Branca', 'Amarela', 'Neutra'],
   },
   {
     id: 2,
@@ -16,6 +18,8 @@ export const produtos = [
     category: 'Eletrodomésticos',
     stock: 30,
     image: 'liquidificador-mondial-1000w.jpg',
+    rating: 4.7,
+    variations: ['Preto', 'Prata'],
   },
   {
     id: 3,
@@ -25,6 +29,8 @@ export const produtos = [
     category: 'Eletrodomésticos',
     stock: 100,
     image: 'garrafa-tupperware.jpg',
+    rating: 4.3,
+    variations: ['500ml', '750ml', '1L'],
   },
   {
     id: 4,
@@ -34,6 +40,8 @@ export const produtos = [
     category: 'Eletrodomésticos',
     stock: 15,
     image: 'ventilador-mesa-britania.jpg',
+    rating: 4.2,
+    variations: ['Branco', 'Cinza', 'Prata'],
   },
   {
     id: 5,
@@ -43,5 +51,7 @@ export const produtos = [
     category: 'Iluminação',
     stock: 60,
     image: 'livro-energia-fique-por-dentro.jpg',
+    rating: 4.0,
+    variations: ['Capa Dura', 'Brochura'],
   },
 ];
