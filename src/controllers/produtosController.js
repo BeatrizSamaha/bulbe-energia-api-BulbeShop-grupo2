@@ -18,3 +18,4 @@ export const listarProdutos = (req, res) => {
     res.status(500).json({ erro: 'Erro interno ao buscar produtos' });
   }
 };
+
