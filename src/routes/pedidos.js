@@ -77,6 +77,6 @@ const router = Router();
  * 404:
  * description: Pedido não encontrado.
  */
-router.get('/:id', autenticar,buscarPedidoPorId);
+router.get("/:id", autenticar, buscarPedidoPorId);
 
 export default router;
