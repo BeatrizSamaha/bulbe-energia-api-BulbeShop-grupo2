@@ -1,0 +1,48 @@
+import { Router } from 'express';
+import { login } from '../controllers/authController.js'; 
+
+const router = Router();
+
+/**
+ * @openapi
+ * /api/v1/auth/login:
+ *   post:
+ *     summary: Autentica o usuário e retorna um token JWT
+ *     tags: [Autenticação]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - senha
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: 'admin@bulbe.com'
+ *               senha:
+ *                 type: string
+ *                 format: password
+ *                 example: '123456'
+ *     responses:
+ *       '200':
+ *         description: Login bem-sucedido. Retorna o token JWT.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *                   example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+ *       '401':
+ *         description: Credenciais inválidas (E-mail ou senha incorretos).
+ *       '400':
+ *         description: Requisição mal formatada (faltando e-mail ou senha).
+ */
+router.post('/login', login);
+
+export default router;
