@@ -35,31 +35,60 @@ const router = Router();
  *
  * /api/v1/produtos:
  *   get:
- *     summary: Lista todos os produtos da página inicial
+ *     summary: Lista produtos com paginação e filtros
  *     tags: [Produtos]
- *     security:
- *       - bearerAuth: []
  *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Número da página
+ *         example: 1
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 20
+ *           maximum: 100
+ *         description: Quantidade de itens por página (máx. 100)
+ *         example: 20
  *       - in: query
  *         name: busca
  *         schema:
  *           type: string
- *           enum: [Conforto, Economia de Energia, Educação, Eletrônicos]
- *           description: Filtrar produtos por termo de busca no título
- *           example: Conforto
+ *         description: Filtrar produtos por termo de busca no título
+ *         example: 'Lâmpada'
+ *       - in: query
+ *         name: categoria
+ *         schema:
+ *           type: string
+ *         description: Filtrar produtos por categoria
+ *         example: 'Economia de energia'
  *     responses:
  *       '200':
- *         description: Sucesso. Retorna a lista de produtos.
+ *         description: Sucesso. Retorna a lista paginada de produtos.
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Produto'
- *       '401':
- *         description: Não autorizado. Token ausente ou inválido.
- *       '404':
- *         description: Categoria não encontrada.
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Produto'
+ *                 total:
+ *                   type: integer
+ *                   example: 5
+ *                 page:
+ *                   type: integer
+ *                   example: 1
+ *                 limit:
+ *                   type: integer
+ *                   example: 20
+ *                 totalPages:
+ *                   type: integer
+ *                   example: 1
  *       '500':
  *         description: Erro interno do servidor.
  *
@@ -91,7 +120,9 @@ const router = Router();
  *         description: Erro interno do servidor.
  */
 
-router.get('/', autenticar, listarProdutos);
+// Rota pública [IMP-30]
+router.get('/', listarProdutos);
+// Rota protegida
 router.get('/:id', autenticar, buscarProdutoPorId);
- 
+
 export default router;
