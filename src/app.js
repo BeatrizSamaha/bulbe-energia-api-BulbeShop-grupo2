@@ -11,7 +11,7 @@ import pagamentosRouter from "./routes/pagamentos.js";
 import favoritosRouter from './routes/favoritos.js';
 import produtosRouter from './routes/produtos.js';
 import carrinhoRouter from './routes/carrinho.js';
-import categoriasRouter from './routes/categorias.js'; // [IMP-27]
+import categoriasRouter from './routes/categorias.js';
 
 const app = express();
 app.use(express.json());
@@ -47,9 +47,9 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/produtos", produtosRouter);
-app.use("/api/v1/categorias", categoriasRouter); // [IMP-27]
+app.use("/api/v1/categorias", categoriasRouter);
 app.use("/api/v1/cupons", cuponsRouter);
-app.use("/api/v1/lojas", lojasRouter);
+app.use("/api/v1/lojas-parceiras", lojasRouter); // [IMP-29] corrigido para lojas-parceiras
 app.use("/api/v1/pedidos", pedidosRouter);
 app.use('/api/v1/carrinho', carrinhoRouter);
 app.use('/api/v1/pagamentos', pagamentosRouter);

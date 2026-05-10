@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { adicionarItem, atualizarQuantidade } from '../controllers/carrinhoController.js';
+import { adicionarItem, atualizarQuantidade, removerItem } from '../controllers/carrinhoController.js';
 import { autenticar } from '../middlewares/autenticar.js';
 
 const router = Router();
@@ -131,8 +131,32 @@ const router = Router();
  *         description: Não autorizado. Token ausente ou inválido.
  *       '500':
  *         description: Erro interno do servidor.
+ *
+ *   delete:
+ *     summary: Remove um item do carrinho
+ *     tags: [Carrinho]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID do produto a ser removido do carrinho
+ *         example: 1
+ *     responses:
+ *       '204':
+ *         description: Item removido com sucesso.
+ *       '404':
+ *         description: Item não encontrado no carrinho.
+ *       '401':
+ *         description: Não autorizado. Token ausente ou inválido.
+ *       '500':
+ *         description: Erro interno do servidor.
  */
 router.post('/itens', autenticar, adicionarItem);
 router.patch('/itens/:id', autenticar, atualizarQuantidade);
+router.delete('/itens/:id', autenticar, removerItem);
 
 export default router;
