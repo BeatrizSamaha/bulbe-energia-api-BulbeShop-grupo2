@@ -15,14 +15,14 @@ export const listarProdutos = (req, res) => {
 
         if (categoria) {
       const categoriaBuscada = categoria.toLowerCase();
-      const categoriasValidas = [...new Set(produtos.map((p) => p.category.toLowerCase()))];
+      const categoriasValidas = [...new Set(produtos.map((p) => p.categoria.toLowerCase()))];
 
       if (!categoriasValidas.includes(categoriaBuscada)) {
         return res.status(404).json({ erro: 'Categoria não encontrada.' });
       }
 
       resultado = resultado.filter((p) =>
-        p.category.toLowerCase() === categoriaBuscada
+        p.categoria.toLowerCase() === categoriaBuscada
       );
     }
 

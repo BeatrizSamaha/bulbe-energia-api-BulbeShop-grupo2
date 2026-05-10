@@ -1,6 +1,22 @@
 import { carrinho } from '../data/carrinho.js';
 import { produtos } from '../data/produtos.js';
 
+export const listarItens = (req, res) => {
+  try {
+    const itens = carrinho.map((item) => ({
+      id: item.produtoId,
+      title: item.title,
+      price: item.price,
+      img: item.img,
+      qty: item.quantidade,
+    }));
+ 
+    res.status(200).json(itens);
+  } catch (error) {
+    res.status(500).json({ erro: 'Erro interno ao listar itens do carrinho' });
+  }
+};
+
 export const adicionarItem = (req, res) => {
   try {
     const { produtoId, quantidade = 1 } = req.body;
