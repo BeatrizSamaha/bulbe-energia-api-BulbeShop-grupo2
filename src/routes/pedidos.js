@@ -1,5 +1,4 @@
 import { Router } from "express";
-import { buscarPedidoPorId, listarPedidos, iniciarCheckout, cancelarPedido, aplicarCupom } from '../controllers/pedidosController.js';
 import {
     buscarPedidoPorId,
     listarPedidos,
