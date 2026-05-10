@@ -1,3 +1,4 @@
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { usuarios } from "../data/usuarios.js";
 import { JWT_SECRET, JWT_EXPIRES_IN } from "../config/auth.js";
