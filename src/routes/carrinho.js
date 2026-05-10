@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { adicionarItem } from '../controllers/carrinhoController.js';
+import { adicionarItem, atualizarQuantidade } from '../controllers/carrinhoController.js';
 import { autenticar } from '../middlewares/autenticar.js';
 
 const router = Router();
@@ -68,5 +68,6 @@ const router = Router();
  *         description: Erro interno do servidor.
  */
 router.post('/itens', autenticar, adicionarItem);
+router.patch('/itens/:id', autenticar, atualizarQuantidade);
 
 export default router;
