@@ -77,7 +77,7 @@ const router = Router();
  *         description: Não autorizado. Token ausente ou inválido.
  *       '500':
  *         description: Erro interno do servidor.
- *  * /api/v1/favoritos:
+ *  /api/v1/favoritos:
  *   get:
  *     summary: Lista todos os produtos favoritos do usuário
  *     tags: [Favoritos]

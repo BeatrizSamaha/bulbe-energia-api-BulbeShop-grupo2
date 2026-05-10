@@ -94,6 +94,6 @@ router.post('/logout', autenticar, logout);
  *       400:
  *         description: Dados inválidos.
  */
-router.post('/register', register);
+// router.post('/register', register);
 
 export default router;
