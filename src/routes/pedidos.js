@@ -3,6 +3,7 @@ import {
     buscarPedidoPorId,
     listarPedidos,
     cancelarPedido,
+    aplicarCupom,
 } from "../controllers/pedidosController.js";
 import { autenticar } from "../middlewares/autenticar.js";
 
@@ -292,5 +293,7 @@ router.get("/", autenticar, listarPedidos);
  *                   example: Erro ao cancelar pedido.
  */
 router.patch("/:id/cancelar", autenticar, cancelarPedido);
+
+router.post("/api/v1/pedidos/:id/cupom", autenticar, aplicarCupom);
 
 export default router;
