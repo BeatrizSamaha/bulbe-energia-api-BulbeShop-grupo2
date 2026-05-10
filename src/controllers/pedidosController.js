@@ -43,3 +43,39 @@ export const listarPedidos = (req, res) => {
         });
     }
 };
+
+export const cancelarPedido = (req, res) => {
+    const { id } = req.params;
+    const usuarioId = req.usuario.id;
+
+    const pedido = pedidos.find((p) => p.id == id);
+
+    //Pedido não existe
+    if(!pedido){
+        return res.status(404).json({
+            mensagem: "Pedido não encontrado.",
+        });
+    }
+
+    //Pedido não é do usuário
+    if(pedido.usuarioId !== usuarioId){
+        return res.status(403).json({
+            mensagem: "Você não tem permissão para cancelar este pedido."
+        });
+    }
+
+    //Pedido já está concluido ou cancelado
+    if(pedido.status === "concluido" || pedido.status === "cancelado"){
+        return res.status(422).json({
+            mensagem: `Não é possível cancelar um pedido que já está ${pedido.status}.`
+        });
+    }
+
+    pedido.status = "cancelado";
+    pedido.canceladoEm = new Date().toISOString();
+
+    return res.status(200).json({
+        mensagem:"Pedido cancelado com sucesso",
+        pedido
+    });
+}
