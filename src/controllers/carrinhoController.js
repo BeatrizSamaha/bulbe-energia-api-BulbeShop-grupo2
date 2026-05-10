@@ -63,3 +63,21 @@ export const atualizarQuantidade = (req, res) => {
     return res.status(500).json({ erro: 'Erro interno ao atualizar quantidade do item.' });
   }
 };
+
+export const removerItem = (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const index = carrinho.findIndex((i) => i.produtoId === Number(id));
+
+    if (index === -1) {
+      return res.status(404).json({ erro: 'Item não encontrado no carrinho.' });
+    }
+
+    carrinho.splice(index, 1);
+
+    return res.status(204).send();
+  } catch (error) {
+    return res.status(500).json({ erro: 'Erro interno ao remover item do carrinho.' });
+  }
+};
