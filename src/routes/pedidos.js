@@ -1,8 +1,5 @@
 import { Router } from "express";
-import {
-    buscarPedidoPorId,
-    listarPedidos,
-} from "../controllers/pedidosController.js";
+import { buscarPedidoPorId, listarPedidos, iniciarCheckout } from '../controllers/pedidosController.js';
 import { autenticar } from "../middlewares/autenticar.js";
 
 const router = Router();
