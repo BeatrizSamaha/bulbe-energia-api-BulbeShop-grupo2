@@ -294,6 +294,128 @@ router.get("/", autenticar, listarPedidos);
  */
 router.patch("/:id/cancelar", autenticar, cancelarPedido);
 
+/**
+ * @swagger
+ * /api/v1/pedidos/{id}/cupom:
+ *   post:
+ *     summary: Aplica um cupom de desconto a um pedido
+ *     tags:
+ *       - Pedidos
+ *     security:
+ *       - bearerAuth: []
+ *
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID do pedido
+ *         schema:
+ *           type: integer
+ *           example: 2
+ *
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               codigo:
+ *                 type: string
+ *                 example: BEMVINDO10
+ *
+ *     responses:
+ *       200:
+ *         description: Cupom aplicado com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 mensagem:
+ *                   type: string
+ *                   example: Cupom aplicado com sucesso.
+ *                 pedido:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                       example: 2
+ *                     usuarioId:
+ *                       type: integer
+ *                       example: 2
+ *                     data:
+ *                       type: string
+ *                       format: date-time
+ *                       example: 2026-05-03T15:30:00Z
+ *                     status:
+ *                       type: string
+ *                       example: ativo
+ *                     metodoPagamento:
+ *                       type: string
+ *                       example: pix
+ *                     subtotal:
+ *                       type: number
+ *                       example: 239.70
+ *                     desconto:
+ *                       type: number
+ *                       example: 23.97
+ *                     total:
+ *                       type: number
+ *                       example: 215.73
+ *                     cupom:
+ *                       type: string
+ *                       example: BEMVINDO10
+ *                     canceladoEm:
+ *                       type: string
+ *                       nullable: true
+ *                       example: null
+ *
+ *       403:
+ *         description: O pedido não pertence ao usuário autenticado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 mensagem:
+ *                   type: string
+ *                   example: Você não tem permissão para alterar esse pedido.
+ *
+ *       404:
+ *         description: Pedido ou cupom não encontrado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 mensagem:
+ *                   type: string
+ *                   example: Cupom não encontrado ou inativo.
+ *
+ *       422:
+ *         description: Cupom já utilizado ou pedido inválido para aplicação de cupom
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 mensagem:
+ *                   type: string
+ *                   example: Este cupom já foi utilizado.
+ *
+ *       500:
+ *         description: Erro interno do servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 mensagem:
+ *                   type: string
+ *                   example: Erro ao aplicar o cupom.
+ */
 router.post("/api/v1/pedidos/:id/cupom", autenticar, aplicarCupom);
+//ISSO PODERIA SER UM PATCH, MAS NA IMP ESTÁ COMO POST.
 
 export default router;
