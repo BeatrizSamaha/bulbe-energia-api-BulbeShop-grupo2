@@ -25,7 +25,7 @@ const router = Router();
  *           example: 18.90
  *         category:
  *           type: string
- *           example: 'Iluminação'
+ *           example: 'Economia de energia'
  *         stock:
  *           type: integer
  *           example: 150
@@ -44,8 +44,9 @@ const router = Router();
  *         name: busca
  *         schema:
  *           type: string
+ *           enum: [Conforto, Economia de Energia, Educação, Eletrônicos]
  *           description: Filtrar produtos por termo de busca no título
- *           example: lampada
+ *           example: Conforto
  *     responses:
  *       '200':
  *         description: Sucesso. Retorna a lista de produtos.
@@ -57,10 +58,40 @@ const router = Router();
  *                 $ref: '#/components/schemas/Produto'
  *       '401':
  *         description: Não autorizado. Token ausente ou inválido.
+ *       '404':
+ *         description: Categoria não encontrada.
+ *       '500':
+ *         description: Erro interno do servidor.
+ *
+ * /api/v1/produtos/{id}:
+ *   get:
+ *     summary: Busca um produto pelo ID
+ *     tags: [Produtos]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         example: 1
+ *     responses:
+ *       '200':
+ *         description: Sucesso. Retorna o produto encontrado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Produto'
+ *       '404':
+ *         description: Produto não encontrado.
+ *       '401':
+ *         description: Não autorizado. Token ausente ou inválido.
  *       '500':
  *         description: Erro interno do servidor.
  */
-router.get('/', listarProdutos);
+
+router.get('/', autenticar, listarProdutos);
 router.get('/:id', autenticar, buscarProdutoPorId);
  
 export default router;
