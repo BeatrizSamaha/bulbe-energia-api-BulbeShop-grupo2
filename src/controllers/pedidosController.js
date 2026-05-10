@@ -1,4 +1,6 @@
 import { pedidos } from "../data/pedidos.js";
+import { carrinho } from '../data/carrinho.js';
+import { cupons } from '../data/cupons.js';
 
 export const buscarPedidoPorId = (req, res) => {
     const { id } = req.params;
@@ -41,5 +43,62 @@ export const listarPedidos = (req, res) => {
         res.status(500).json({
             mensagem: "Erro ao buscar histórico de pedidos.",
         });
+    }
+};
+
+export const iniciarCheckout = (req, res) => {
+    try {
+        const usuarioId = req.usuario.id;
+        const { cupom: codigoCupom } = req.body;
+
+        if (carrinho.length === 0) {
+            return res.status(422).json({ erro: 'O carrinho está vazio.' });
+        }
+
+        const subtotal = carrinho.reduce((acc, item) => {
+            return acc + item.price * item.quantidade;
+        }, 0);
+
+        // Aplica cupom se informado
+        let desconto = 0;
+        let cupomAplicado = null;
+
+        if (codigoCupom) {
+            const cupomEncontrado = cupons.find(
+                (c) => c.codigo === codigoCupom && c.ativo
+            );
+
+            if (!cupomEncontrado) {
+                return res.status(422).json({ erro: 'Cupom inválido ou expirado.' });
+            }
+
+            desconto = cupomEncontrado.valor;
+            cupomAplicado = codigoCupom;
+        }
+
+        const total = Math.max(0, subtotal - desconto);
+
+        // Cria o pedido
+        const novoPedido = {
+            id: pedidos.length + 1,
+            usuarioId,
+            data: new Date().toISOString(),
+            status: 'ativo',
+            metodoPagamento: null,
+            itens: carrinho.map((item) => ({ ...item })),
+            subtotal: Number(subtotal.toFixed(2)),
+            desconto: Number(desconto.toFixed(2)),
+            total: Number(total.toFixed(2)),
+            cupom: cupomAplicado,
+            canceladoEm: null,
+        };
+
+        pedidos.push(novoPedido);
+
+        carrinho.splice(0, carrinho.length);
+
+        return res.status(201).json(novoPedido);
+    } catch (error) {
+        return res.status(500).json({ erro: 'Erro interno ao iniciar checkout.' });
     }
 };
