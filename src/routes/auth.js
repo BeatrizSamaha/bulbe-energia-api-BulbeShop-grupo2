@@ -69,4 +69,31 @@ const router = Router();
 router.post('/login', login);
 router.post('/logout', autenticar, logout);
 
+/**
+ * @openapi
+ * /api/v1/auth/register:
+ *   post:
+ *     summary: Cadastra um novo usuário e retorna um token
+ *     tags: [Autenticação]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [nome, email, senha]
+ *             properties:
+ *               nome: { type: string, example: 'João Silva' }
+ *               email: { type: string, example: 'joao@email.com' }
+ *               senha: { type: string, example: '123456' }
+ *     responses:
+ *       201:
+ *         description: Usuário criado com sucesso.
+ *       409:
+ *         description: E-mail já cadastrado.
+ *       400:
+ *         description: Dados inválidos.
+ */
+router.post('/register', register);
+
 export default router;
