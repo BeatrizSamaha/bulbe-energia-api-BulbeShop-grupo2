@@ -42,6 +42,10 @@ import produtosRouter from './routes/produtos.js';
 
 app.use('/api/v1/produtos', produtosRouter);
 
+import carrinhoRouter from './routes/carrinho.js';
+
+app.use('/api/v1/carrinho', carrinhoRouter);
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
