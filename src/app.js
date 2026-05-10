@@ -7,6 +7,7 @@ import cuponsRouter from "./routes/cupons.js";
 import lojasRouter from "./routes/lojas.js";
 import authRouter from "./routes/auth.js";
 import pedidosRouter from "./routes/pedidos.js";
+import pagamentosRouter from "./routes/pagamentos.js";
 
 const app = express();
 app.use(express.json());
@@ -52,6 +53,8 @@ app.use("/api/v1/pedidos", pedidosRouter);
 import produtosRouter from './routes/produtos.js';
 
 app.use('/api/v1/produtos', produtosRouter);
+
+app.use('/api/v1/pagamentos', pagamentosRouter);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
