@@ -66,6 +66,51 @@ const router = Router();
  *         description: Não autorizado. Token ausente ou inválido.
  *       '500':
  *         description: Erro interno do servidor.
+ * /api/v1/carrinho/itens/{id}:
+ *   patch:
+ *     summary: Atualiza a quantidade de um item no carrinho
+ *     tags: [Carrinho]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID do produto a ser atualizado
+ *         example: 1
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - quantidade
+ *             properties:
+ *               quantidade:
+ *                 type: integer
+ *                 minimum: 1
+ *                 example: 3
+ *                 description: Nova quantidade desejada (deve ser >= 1)
+ *     responses:
+ *       '200':
+ *         description: Quantidade atualizada. Retorna o carrinho atualizado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/ItemCarrinho'
+ *       '404':
+ *         description: Item não encontrado no carrinho.
+ *       '422':
+ *         description: Dados inválidos (quantidade ausente ou menor que 1).
+ *       '401':
+ *         description: Não autorizado. Token ausente ou inválido.
+ *       '500':
+ *         description: Erro interno do servidor.
  */
 router.post('/itens', autenticar, adicionarItem);
 router.patch('/itens/:id', autenticar, atualizarQuantidade);
