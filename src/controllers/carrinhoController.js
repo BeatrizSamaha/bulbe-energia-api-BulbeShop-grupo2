@@ -34,3 +34,32 @@ export const adicionarItem = (req, res) => {
     res.status(500).json({ erro: 'Erro interno ao adicionar item ao carrinho' });
   }
 };
+
+export const atualizarQuantidade = (req, res) => {
+  try {
+    const { id } = req.params;
+    const { quantidade } = req.body;
+
+    if (quantidade === undefined || quantidade === null) {
+      return res.status(422).json({ erro: 'O campo "quantidade" é obrigatório.' });
+    }
+
+    const qtd = Number(quantidade);
+
+    if (!Number.isInteger(qtd) || qtd < 1) {
+      return res.status(422).json({ erro: 'O campo "quantidade" deve ser um número inteiro maior que zero.' });
+    }
+
+    const item = carrinho.find((i) => i.produtoId === Number(id));
+
+    if (!item) {
+      return res.status(404).json({ erro: 'Item não encontrado no carrinho.' });
+    }
+
+    item.quantidade = qtd;
+
+    return res.status(200).json(carrinho);
+  } catch (error) {
+    return res.status(500).json({ erro: 'Erro interno ao atualizar quantidade do item.' });
+  }
+};
