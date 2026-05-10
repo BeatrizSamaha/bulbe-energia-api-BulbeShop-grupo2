@@ -54,6 +54,10 @@ import produtosRouter from './routes/produtos.js';
 
 app.use('/api/v1/produtos', produtosRouter);
 
+import carrinhoRouter from './routes/carrinho.js';
+
+app.use('/api/v1/carrinho', carrinhoRouter);
+
 app.use('/api/v1/pagamentos', pagamentosRouter);
 
 const PORT = process.env.PORT || 3000;
