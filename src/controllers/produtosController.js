@@ -2,15 +2,28 @@ import { produtos } from '../data/produtos.js';
 
 export const listarProdutos = (req, res) => {
   try {
-    const { busca } = req.query;
+    const { busca, categoria } = req.query;
 
     let resultado = produtos;
 
     if (busca) {
         const termo = busca.toLowerCase();
-        resultado = resultado.filter((produto) =>
-            produto.title.toLowerCase().includes(termo)
+        resultado = resultado.filter((p) =>
+            p.title.toLowerCase().includes(termo)
         );
+    }
+
+        if (categoria) {
+      const categoriaBuscada = categoria.toLowerCase();
+      const categoriasValidas = [...new Set(produtos.map((p) => p.category.toLowerCase()))];
+
+      if (!categoriasValidas.includes(categoriaBuscada)) {
+        return res.status(404).json({ erro: 'Categoria não encontrada.' });
+      }
+
+      resultado = resultado.filter((p) =>
+        p.category.toLowerCase() === categoriaBuscada
+      );
     }
 
     res.status(200).json(resultado);
