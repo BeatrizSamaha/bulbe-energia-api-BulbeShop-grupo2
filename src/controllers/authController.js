@@ -1,43 +1,51 @@
 import jwt from "jsonwebtoken";
 import { usuarios } from "../data/usuarios.js";
 import { JWT_SECRET, JWT_EXPIRES_IN } from "../config/auth.js";
+import { adicionarNaBlacklist } from "../middlewares/blacklist.js";
 
-// Post - /auth/login
-
+// POST /api/v1/auth/login
 export const login = (req, res) => {
-    const { email, senha } = req.body;
+  const { email, senha } = req.body;
 
-    //Teste para presença dos campos
-    if (!email || !senha) {
-        return res.status(400).json({
-            erro: 'Os campos "email" e "senha" são obrigatórios',
-        });
-    }
-
-    //Buscar email
-    const usuario = usuarios.find((u) => u.email === email);
-
-    //verificar usuario e senha
-    if (!usuario || usuario.senha !== senha) {
-        return res.status(401).json({
-            erro: "Credenciais inválidas",
-        });
-    }
-
-    //payload
-    const payload = {
-        sub: usuario.id,
-        nome: usuario.nome,
-        papel: usuario.papel,
-    };
-
-    //Gerar o token JWT
-    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
-
-    //Retornar o token ao cliente
-    return res.status(200).json({
-        mensagem: "Autenticação realizada com sucesso.",
-        token,
-        expira_em: JWT_EXPIRES_IN,
+  if (!email || !senha) {
+    return res.status(400).json({
+      erro: 'Os campos "email" e "senha" são obrigatórios',
     });
+  }
+
+  const usuario = usuarios.find((u) => u.email === email);
+
+  if (!usuario || usuario.senha !== senha) {
+    return res.status(401).json({
+      erro: "Credenciais inválidas",
+    });
+  }
+
+  const payload = {
+    sub: usuario.id,
+    nome: usuario.nome,
+    papel: usuario.papel,
+  };
+
+  const token = jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+
+  return res.status(200).json({
+    mensagem: "Autenticação realizada com sucesso.",
+    token,
+    expira_em: JWT_EXPIRES_IN,
+  });
+};
+
+// POST /api/v1/auth/logout  imp 26
+export const logout = (req, res) => {
+  const authHeader = req.headers["authorization"];
+
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(400).json({ erro: "Token não fornecido." });
+  }
+
+  const token = authHeader.split(" ")[1];
+  adicionarNaBlacklist(token);
+
+  return res.status(200).json({ mensagem: "Logout realizado com sucesso." });
 };
