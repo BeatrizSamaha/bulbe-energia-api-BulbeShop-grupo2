@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { buscarPedidoPorId, listarPedidos, iniciarCheckout, cancelarPedido, aplicarCupom } from '../controllers/pedidosController.js';
 import {
     buscarPedidoPorId,
     listarPedidos,
@@ -11,6 +12,8 @@ const router = Router();
 
 /**
  * @swagger
+ * 
+ * 
  * /api/v1/pedidos/{id}:
  *   get:
  *     summary: Buscar pedido por ID
@@ -161,8 +164,69 @@ router.get("/:id", autenticar, buscarPedidoPorId);
  *                           example: 18.90
  *       401:
  *         description: Token ausente ou inválido
+ * 
+ *   post:
+ *     summary: Inicia o checkout criando um pedido a partir do carrinho
+ *     tags: [Pedidos]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: false
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               cupom:
+ *                 type: string
+ *                 example: 'BEMVINDO10'
+ *                 description: Código de cupom de desconto (opcional)
+ *     responses:
+ *       '201':
+ *         description: Pedido criado com sucesso.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   example: 8
+ *                 usuarioId:
+ *                   type: integer
+ *                   example: 1
+ *                 data:
+ *                   type: string
+ *                   format: date-time
+ *                 status:
+ *                   type: string
+ *                   example: 'ativo'
+ *                 itens:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/ItemCarrinho'
+ *                 subtotal:
+ *                   type: number
+ *                   example: 37.80
+ *                 desconto:
+ *                   type: number
+ *                   example: 10.00
+ *                 total:
+ *                   type: number
+ *                   example: 27.80
+ *                 cupom:
+ *                   type: string
+ *                   nullable: true
+ *                   example: 'BEMVINDO10'
+ *       '422':
+ *         description: Carrinho vazio ou cupom inválido.
+ *       '401':
+ *         description: Não autorizado. Token ausente ou inválido.
+ *       '500':
+ *         description: Erro interno do servidor.
  */
 router.get("/", autenticar, listarPedidos);
+router.post("/:id/cupom", autenticar, aplicarCupom);
 
 /**
  * @swagger
