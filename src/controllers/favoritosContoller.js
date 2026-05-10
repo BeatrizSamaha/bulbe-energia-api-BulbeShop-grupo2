@@ -47,3 +47,11 @@ export const desfavoritarProduto = (req, res) => {
         return res.status(500).json({ erro: 'Erro interno ao desfavoritar produto.' });
     }
 };
+
+export const listarFavoritos = (req, res) => {
+    try {
+        return res.status(200).json(favoritos);
+    } catch (error) {
+        return res.status(500).json({ erro: 'Erro interno ao listar favoritos.' });
+    }
+};
