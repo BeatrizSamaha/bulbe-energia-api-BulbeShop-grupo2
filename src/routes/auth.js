@@ -1,5 +1,6 @@
 import { Router } from 'express';
-import { login, register } from '../controllers/authController.js'; 
+import { login, logout } from '../controllers/authController.js';
+import { autenticar } from '../middlewares/autenticar.js';
 
 const router = Router();
 
@@ -39,11 +40,34 @@ const router = Router();
  *                   type: string
  *                   example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
  *       '401':
- *         description: Credenciais inválidas (E-mail ou senha incorretos).
+ *         description: Credenciais inválidas.
  *       '400':
  *         description: Requisição mal formatada (faltando e-mail ou senha).
+ *
+ * /api/v1/auth/logout:
+ *   post:
+ *     summary: Invalida o token JWT do usuário (logout)
+ *     tags: [Autenticação]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       '200':
+ *         description: Logout realizado com sucesso.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 mensagem:
+ *                   type: string
+ *                   example: 'Logout realizado com sucesso.'
+ *       '400':
+ *         description: Token não fornecido.
+ *       '401':
+ *         description: Token inválido ou expirado.
  */
 router.post('/login', login);
+router.post('/logout', autenticar, logout);
 
 /**
  * @openapi
