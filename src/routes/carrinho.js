@@ -46,26 +46,7 @@ const router = Router();
  *       '500':
  *         description: Erro interno do servidor.
  * 
- * /api/v1/carrinho:
- *   get:
- *     summary: Lista os itens do carrinho
- *     tags: [Carrinho]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       '200':
- *         description: Sucesso. Retorna os itens do carrinho.
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/ItemCarrinho'
- *       '401':
- *         description: Não autorizado. Token ausente ou inválido.
- *       '500':
- *         description: Erro interno do servidor.
- *
+
  * /api/v1/carrinho/itens:
  *   post:
  *     summary: Adiciona um produto ao carrinho
