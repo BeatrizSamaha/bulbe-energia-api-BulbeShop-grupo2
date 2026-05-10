@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { buscarPedidoPorId, listarPedidos, iniciarCheckout } from '../controllers/pedidosController.js';
+import { buscarPedidoPorId, listarPedidos, iniciarCheckout, cancelarPedido, aplicarCupom } from '../controllers/pedidosController.js';
 import { autenticar } from "../middlewares/autenticar.js";
 
 const router = Router();
@@ -220,6 +220,6 @@ router.get("/:id", autenticar, buscarPedidoPorId);
  *         description: Erro interno do servidor.
  */
 router.get("/", autenticar, listarPedidos);
-router.post('/', autenticar, iniciarCheckout);
+router.post("/:id/cupom", autenticar, aplicarCupom);
 
 export default router;
