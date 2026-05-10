@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { adicionarItem, atualizarQuantidade } from '../controllers/carrinhoController.js';
+import { adicionarItem, atualizarQuantidade, removerItem } from '../controllers/carrinhoController.js';
 import { autenticar } from '../middlewares/autenticar.js';
 
 const router = Router();
