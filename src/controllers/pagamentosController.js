@@ -1,0 +1,71 @@
+import { produtos } from '../data/produtos.js';
+import { cupons } from '../data/cupons.js';
+import { pedidos } from '../data/pedidos.js';
+
+export const processarPagamentoPix = (req, res) => {
+    const { itens, cupom: codigoCupom } = req.body;
+
+    // PASSO 1: validar que itens existe e não está vazio
+    if (!itens || itens.length === 0) {
+        return res.status(400).json({ mensagem: 'Informe ao menos um item.' });
+    }
+
+    // PASSO 2: para cada item, buscar o produto e validar que existe
+    const itensPedido = [];
+    for (const item of itens) {
+        const produto = produtos.find((p) => p.id === item.produtoId);
+        if (!produto) {
+            return res.status(404).json({ mensagem: `Produto ${item.produtoId} não encontrado.` });
+        }
+        itensPedido.push({
+            produtoId: produto.id,
+            title: produto.title,
+            quantidade: item.quantidade,
+            price: produto.price,
+        });
+    }
+
+    // PASSO 3: calcular subtotal somando price * quantidade de cada item
+    const subtotal = itensPedido.reduce((acc, item) => acc + item.price * item.quantidade, 0);
+
+    // PASSO 4: aplicar cupom se fornecido
+    let desconto = 0;
+    let cupomAplicado = null;
+    if (codigoCupom) {
+        const cupom = cupons.find((c) => c.codigo === codigoCupom && c.ativo);
+        if (!cupom) {
+            return res.status(400).json({ mensagem: 'Cupom inválido ou expirado.' });
+        }
+        desconto = cupom.valor;
+        cupomAplicado = cupom.codigo;
+    }
+
+    const total = Math.max(0, subtotal - desconto);
+
+    // PASSO 5: montar o pedido e salvar no array
+    const novoPedido = {
+        id: pedidos.length + 1,
+        usuarioId: req.usuario.id,
+        data: new Date().toISOString(),
+        status: 'ativo',
+        metodoPagamento: 'pix',
+        itens: itensPedido,
+        subtotal: parseFloat(subtotal.toFixed(2)),
+        desconto: parseFloat(desconto.toFixed(2)),
+        total: parseFloat(total.toFixed(2)),
+        cupom: cupomAplicado,
+        canceladoEm: null,
+    };
+    pedidos.push(novoPedido);
+
+    // PASSO 6: retornar 201 com o pedido + dados PIX mock
+    return res.status(201).json({
+        pedido: novoPedido,
+        pagamento: {
+            metodo: 'pix',
+            chavePix: 'bulbeshop@pix.com.br',
+            qrCode: '00020126580014br.gov.bcb.pix0136bulbeshop@pix.com.br',
+            expiracao: new Date(Date.now() + 30 * 60 * 1000).toISOString(),
+        },
+    });
+};
