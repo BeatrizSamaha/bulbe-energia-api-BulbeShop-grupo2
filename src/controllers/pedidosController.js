@@ -4,7 +4,7 @@ import { cupons } from "../data/cupons.js";
 
 export const buscarPedidoPorId = (req, res) => {
     const { id } = req.params;
-    const usuarioLogadoId = req.usuario?.id;
+    const usuarioLogadoId = req.usuario?.sub;
     const pedido = pedidos.find((p) => p.id === Number(id));
 
     if (!pedido) {
@@ -22,7 +22,7 @@ export const buscarPedidoPorId = (req, res) => {
 
 export const listarPedidos = (req, res) => {
     try {
-        const usuarioId = req.usuario.id;
+        const usuarioId = req.usuario.sub;
         const meusPedidos = pedidos.filter((p) => p.usuarioId === usuarioId);
         const pedidosOrdenados = meusPedidos.sort(
             (a, b) => new Date(b.data) - new Date(a.data),
@@ -35,7 +35,7 @@ export const listarPedidos = (req, res) => {
 
 export const iniciarCheckout = (req, res) => {
     try {
-        const usuarioId = req.usuario.id;
+        const usuarioId = req.usuario.sub;
         const { cupom: codigoCupom } = req.body;
 
         if (carrinho.length === 0) {
@@ -90,7 +90,7 @@ export const iniciarCheckout = (req, res) => {
 export const cancelarPedido = (req, res) => {
     try {
         const { id } = req.params;
-        const usuarioId = req.usuario.id;
+        const usuarioId = req.usuario.sub;
         const pedido = pedidos.find((p) => p.id === Number(id));
 
         if (!pedido) {
@@ -122,7 +122,7 @@ export const aplicarCupom = (req, res) => {
     try {
         const { id } = req.params;
         const { codigo } = req.body;
-        const usuarioId = req.usuario.id;
+        const usuarioId = req.usuario.sub;
 
         const pedido = pedidos.find((p) => p.id === Number(id));
 
