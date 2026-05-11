@@ -1,6 +1,6 @@
 import { produtos } from '../data/produtos.js';
 
-// GET /api/v1/produtos  [IMP-30 - com paginação]
+// GET /api/v1/produtos  
 export const listarProdutos = (req, res) => {
   try {
     const { busca, categoria, page, limit } = req.query;
@@ -14,15 +14,15 @@ export const listarProdutos = (req, res) => {
       );
     }
 
-    // Filtro por categoria [compatível com IMP-03]
+    // Filtro por categoria case-insensitive
     if (categoria) {
-      const termo = categoria.toLowerCase();
+      const termo = categoria.toLowerCase().trim();
       resultado = resultado.filter((produto) =>
-        produto.category.toLowerCase() === termo
+        produto.category.toLowerCase().trim() === termo
       );
     }
 
-    // Paginação [IMP-30]
+    // Paginação 
     const paginaAtual = Math.max(1, parseInt(page) || 1);
     const itensPorPagina = Math.min(100, Math.max(1, parseInt(limit) || 20));
     const total = resultado.length;
@@ -45,7 +45,14 @@ export const listarProdutos = (req, res) => {
 // GET /api/v1/produtos/:id
 export const buscarProdutoPorId = (req, res) => {
   try {
-    const produto = produtos.find((p) => p.id === Number(req.params.id));
+    const id = Number(req.params.id);
+
+    // fix: valida se o ID é um número válido
+    if (!Number.isInteger(id) || id <= 0) {
+      return res.status(400).json({ erro: 'O ID informado é inválido.' });
+    }
+
+    const produto = produtos.find((p) => p.id === id);
 
     if (!produto) {
       return res.status(404).json({ erro: 'Produto não encontrado.' });
