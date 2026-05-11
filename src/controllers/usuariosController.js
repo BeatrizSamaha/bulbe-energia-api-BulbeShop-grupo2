@@ -30,3 +30,16 @@ export const editarPerfil = (req, res) => {
     const { senha: _, ...perfil } = usuario;
     return res.status(200).json({ mensagem: 'Perfil atualizado com sucesso.', perfil });
 };
+
+export const consultarPontos = (req, res) => {
+    const usuario = usuarios.find((u) => u.id === req.usuario.sub);
+
+    if (!usuario) {
+        return res.status(404).json({ mensagem: 'Usuário não encontrado.' });
+    }
+
+    return res.status(200).json({
+        usuario: usuario.nome,
+        pontos: usuario.pontos,
+    });
+};
