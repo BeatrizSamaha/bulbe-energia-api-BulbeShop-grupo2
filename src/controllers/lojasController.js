@@ -3,13 +3,14 @@ import { lojas } from '../data/lojas.js';
 // GET /api/v1/lojas-parceiras
 export const listarLojas = (req, res) => {
   try {
-    res.status(200).json(lojas);
+    const lojasAtivas = lojas.filter((l) => l.ativa === true); // fix: filtra apenas lojas ativas
+    res.status(200).json(lojasAtivas);
   } catch (error) {
     res.status(500).json({ erro: 'Erro interno ao buscar lojas parceiras' });
   }
 };
 
-// GET /api/v1/lojas-parceiras/:id 
+// GET /api/v1/lojas-parceiras/:id  
 export const buscarLojaPorId = (req, res) => {
   try {
     const loja = lojas.find((l) => l.id === Number(req.params.id));
