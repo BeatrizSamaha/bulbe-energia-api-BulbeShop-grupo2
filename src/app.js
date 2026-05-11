@@ -12,6 +12,7 @@ import favoritosRouter from './routes/favoritos.js';
 import produtosRouter from './routes/produtos.js';
 import carrinhoRouter from './routes/carrinho.js';
 import categoriasRouter from './routes/categorias.js';
+import usuariosRouter from './routes/usuarios.js';
 
 const app = express();
 app.use(express.json());
@@ -54,6 +55,7 @@ app.use("/api/v1/pedidos", pedidosRouter);
 app.use('/api/v1/carrinho', carrinhoRouter);
 app.use('/api/v1/pagamentos', pagamentosRouter);
 app.use('/api/v1/favoritos', favoritosRouter);
+app.use('/api/v1/usuarios', usuariosRouter);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
