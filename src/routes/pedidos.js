@@ -114,7 +114,7 @@ router.patch("/:id/cancelar", autenticar, cancelarPedido);
 /**
  * @openapi
  * /api/v1/pedidos/{id}/cupom:
- *   post:
+ *   patch:
  *     summary: Aplica um cupom de desconto a um pedido
  *     tags:
  *       - Pedidos
@@ -148,6 +148,6 @@ router.patch("/:id/cancelar", autenticar, cancelarPedido);
  *       500:
  *         description: Erro interno do servidor.
  */
-router.post("/:id/cupom", autenticar, aplicarCupom);
+router.patch("/:id/cupom", autenticar, aplicarCupom);
 
 export default router;
