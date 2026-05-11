@@ -27,7 +27,7 @@ export const listarPedidos = (req, res) => {
         const pedidosOrdenados = meusPedidos.sort(
             (a, b) => new Date(b.data) - new Date(a.data),
         );
-        res.status(200).json(pedidosOrdenados);
+        res.status(200).json(pedidosOrdenados); // fix: retorna a lista ordenada
     } catch (error) {
         res.status(500).json({ mensagem: "Erro ao buscar histórico de pedidos." });
     }
