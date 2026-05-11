@@ -27,7 +27,7 @@ export const listarPedidos = (req, res) => {
         const pedidosOrdenados = meusPedidos.sort(
             (a, b) => new Date(b.data) - new Date(a.data),
         );
-        res.status(200).json(pedidosOrdenados); // fix: retorna a lista ordenada
+        res.status(200).json(pedidosOrdenados);
     } catch (error) {
         res.status(500).json({ mensagem: "Erro ao buscar histórico de pedidos." });
     }
@@ -58,7 +58,7 @@ export const iniciarCheckout = (req, res) => {
                 return res.status(422).json({ erro: 'Cupom inválido ou expirado.' });
             }
 
-            desconto = cupomEncontrado.valor;
+            desconto = cupomEncontrado.desconto; // fix: campo padronizado para desconto
             cupomAplicado = codigoCupom;
         }
 
@@ -156,7 +156,7 @@ export const aplicarCupom = (req, res) => {
             return res.status(422).json({ mensagem: "Este cupom já foi utilizado." });
         }
 
-        const desconto = (pedido.subtotal * cupom.valor) / 100;
+        const desconto = (pedido.subtotal * cupom.desconto) / 100; // fix: campo padronizado para desconto
         pedido.cupom = cupom.codigo;
         pedido.desconto = Number(desconto.toFixed(2));
         pedido.total = Number(Math.max(pedido.subtotal - desconto, 0).toFixed(2));
