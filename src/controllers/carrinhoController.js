@@ -7,7 +7,7 @@ export const listarItens = (req, res) => {
       id: item.produtoId,
       title: item.title,
       price: item.price,
-      img: item.img,
+      image: item.image, // fix: campo correto é image
       qty: item.quantidade,
     }));
  
@@ -40,7 +40,7 @@ export const adicionarItem = (req, res) => {
         produtoId: Number(produtoId),
         title: produto.title,
         price: produto.price,
-        img: produto.img,
+        image: produto.image, // fix: campo correto é image
         quantidade: Number(quantidade),
       });
     }
