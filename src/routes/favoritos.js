@@ -24,6 +24,26 @@ const router = Router();
  *           type: string
  *           example: 'lampada-led-9w.jpg'
  *
+ * /api/v1/favoritos:
+ *   get:
+ *     summary: Lista todos os produtos favoritos do usuário
+ *     tags: [Favoritos]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       '200':
+ *         description: Lista de favoritos retornada com sucesso.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/ItemFavorito'
+ *       '401':
+ *         description: Não autorizado. Token ausente ou inválido.
+ *       '500':
+ *         description: Erro interno do servidor.
+ *
  * /api/v1/favoritos/{produtoId}:
  *   post:
  *     summary: Favorita um produto
@@ -77,26 +97,6 @@ const router = Router();
  *         description: Não autorizado. Token ausente ou inválido.
  *       '500':
  *         description: Erro interno do servidor.
- *  /api/v1/favoritos:
- *   get:
- *     summary: Lista todos os produtos favoritos do usuário
- *     tags: [Favoritos]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       '200':
- *         description: Lista de favoritos retornada com sucesso.
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/ItemFavorito'
- *       '401':
- *         description: Não autorizado. Token ausente ou inválido.
- *       '500':
- *         description: Erro interno do servidor.
- *
  */
 router.post('/:produtoId', autenticar, favoritarProduto);
 router.delete('/:produtoId', autenticar, desfavoritarProduto);
