@@ -14,11 +14,11 @@ export const listarProdutos = (req, res) => {
       );
     }
 
-    // Filtro por categoria [compatível com IMP-03]
+    // Filtro por categoria case-insensitive [fix]
     if (categoria) {
-      const termo = categoria.toLowerCase();
+      const termo = categoria.toLowerCase().trim();
       resultado = resultado.filter((produto) =>
-        produto.category.toLowerCase() === termo
+        produto.category.toLowerCase().trim() === termo
       );
     }
 
