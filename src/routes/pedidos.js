@@ -11,7 +11,7 @@ import { autenticar } from "../middlewares/autenticar.js";
 const router = Router();
 
 /**
- * @swagger
+ * @openapi
  *
  * /api/v1/pedidos/{id}:
  *   get:
@@ -39,7 +39,7 @@ const router = Router();
 router.get("/:id", autenticar, buscarPedidoPorId);
 
 /**
- * @swagger
+ * @openapi
  * /api/v1/pedidos:
  *   get:
  *     summary: Listar histórico de pedidos do usuário
@@ -83,7 +83,7 @@ router.get("/", autenticar, listarPedidos);
 router.post("/", autenticar, iniciarCheckout);
 
 /**
- * @swagger
+ * @openapi
  * /api/v1/pedidos/{id}/cancelar:
  *   patch:
  *     summary: Cancela um pedido do usuário autenticado
@@ -112,7 +112,7 @@ router.post("/", autenticar, iniciarCheckout);
 router.patch("/:id/cancelar", autenticar, cancelarPedido);
 
 /**
- * @swagger
+ * @openapi
  * /api/v1/pedidos/{id}/cupom:
  *   post:
  *     summary: Aplica um cupom de desconto a um pedido
