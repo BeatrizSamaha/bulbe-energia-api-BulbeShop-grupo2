@@ -7,6 +7,7 @@ export const usuarios =[
         email: 'beatriz.samaha@bulbeshop.com.br',
         senha: 'senha123',
         papel: 'admin',
+        pontos: 10
     },
     {
         id: 2,
@@ -14,6 +15,7 @@ export const usuarios =[
         email: 'julia.leal@bulbeshop.com.br',
         senha: 'senha123',
         papel: 'cliente',
+        pontos: 10
     },
     {
         id: 3,
@@ -21,6 +23,7 @@ export const usuarios =[
         email: 'bruna.cruz@bulbeshop.com.br',
         senha: 'senha123',
         papel: 'admin',
+        pontos: 10
     },
     {
         id: 4,
@@ -28,6 +31,7 @@ export const usuarios =[
         email: 'pedro.paulucci@bulbeshop.com.br',
         senha: 'senha123',
         papel: 'cliente',
+        pontos: 10000
     },
     {
         id: 5,
@@ -35,6 +39,7 @@ export const usuarios =[
         email: 'tiago.heitzmann@bulbeshop.com.br',
         senha: 'senha123',
         papel: 'admin',
+        pontos: 10
     },
     {
         id: 6,
@@ -42,5 +47,6 @@ export const usuarios =[
         email: 'tiago.lage@bulbeshop.com.br',
         senha: 'senha123',
         papel: 'cliente',
+        pontos: 10
     },
 ]
