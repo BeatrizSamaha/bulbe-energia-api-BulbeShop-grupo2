@@ -15,6 +15,7 @@ export const listarProdutos = (req, res) => {
     }
 
     // Filtro por categoria case-insensitive
+    // Filtro por categoria case-insensitive [fix]
     if (categoria) {
       const termo = categoria.toLowerCase().trim();
       resultado = resultado.filter((produto) =>
