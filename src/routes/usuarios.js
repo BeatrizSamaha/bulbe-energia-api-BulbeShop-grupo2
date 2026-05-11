@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { verPerfil, editarPerfil } from '../controllers/usuariosController.js';
+import { verPerfil, editarPerfil, consultarPontos } from '../controllers/usuariosController.js';
 import { autenticar } from '../middlewares/autenticar.js';
 
 const router = Router();
@@ -33,6 +33,9 @@ const router = Router();
  *                 papel:
  *                   type: string
  *                   example: "cliente"
+ *                 pontos:
+ *                   type: integer
+ *                   example: 210
  *       401:
  *         description: Token ausente ou inválido.
  *       404:
@@ -73,5 +76,35 @@ router.get('/perfil', autenticar, verPerfil);
  *         description: Usuário não encontrado.
  */
 router.put('/perfil', autenticar, editarPerfil);
+
+/**
+ * @swagger
+ * /api/v1/usuarios/pontos:
+ *   get:
+ *     summary: Consultar pontos Bulbe do usuário logado
+ *     tags:
+ *       - Usuários
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Pontos retornados com sucesso.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 usuario:
+ *                   type: string
+ *                   example: "Pedro Paulucci"
+ *                 pontos:
+ *                   type: integer
+ *                   example: 10000
+ *       401:
+ *         description: Token ausente ou inválido.
+ *       404:
+ *         description: Usuário não encontrado.
+ */
+router.get('/pontos', autenticar, consultarPontos);
 
 export default router;
