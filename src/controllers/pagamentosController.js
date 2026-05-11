@@ -138,4 +138,84 @@ export const processarPagamentoBoleto = (req, res) => {
         },
     });
 };
-    
+
+export const processarPagamentoCartao = (req, res) => {
+    const { itens, cupom: codigoCupom, cartao } = req.body;
+
+    // PASSO 1: validar itens e dados do cartão
+    if (!itens || itens.length === 0) {
+        return res.status(400).json({ mensagem: 'Informe ao menos um item.' });
+    }
+    if (!cartao || !cartao.tipo) {
+        return res.status(400).json({ mensagem: 'Informe os dados do cartão (tipo: debito ou credito).' });
+    }
+    if (!['debito', 'credito'].includes(cartao.tipo)) {
+        return res.status(400).json({ mensagem: 'Tipo de cartão inválido. Use "debito" ou "credito".' });
+    }
+
+    // PASSO 2: buscar e validar produtos
+    const itensPedido = [];
+    for (const item of itens) {
+        const produto = produtos.find((p) => p.id === Number(item.produtoId));
+        if (!produto) {
+            return res.status(404).json({ mensagem: `Produto ${item.produtoId} não encontrado.` });
+        }
+        itensPedido.push({
+            produtoId: produto.id,
+            title: produto.title,
+            quantidade: Number(item.quantidade),
+            price: produto.price,
+        });
+    }
+
+    // PASSO 3: calcular subtotal
+    let subtotal = 0;
+    for (const item of itensPedido) {
+        subtotal += item.price * item.quantidade;
+    }
+
+    // PASSO 4: aplicar cupom se fornecido
+    let desconto = 0;
+    let cupomAplicado = null;
+    if (codigoCupom) {
+        const cupom = cupons.find((c) => c.codigo === codigoCupom && c.ativo);
+        if (!cupom) {
+            return res.status(400).json({ mensagem: 'Cupom inválido ou expirado.' });
+        }
+        desconto = cupom.tipo === '%' ? subtotal * (cupom.desconto / 100) : cupom.desconto;
+        cupomAplicado = cupom.codigo;
+    }
+
+    const total = Math.max(0, subtotal - desconto);
+    const parcelas = cartao.tipo === 'credito' ? (cartao.parcelas || 1) : 1;
+    const metodoPagamento = cartao.tipo === 'credito' ? 'cartao_credito' : 'cartao_debito';
+
+    // PASSO 5: montar o pedido e salvar
+    const novoPedido = {
+        id: pedidos.length + 1,
+        usuarioId: req.usuario.id,
+        data: new Date().toISOString(),
+        status: 'ativo',
+        metodoPagamento,
+        itens: itensPedido,
+        subtotal: parseFloat(subtotal.toFixed(2)),
+        desconto: parseFloat(desconto.toFixed(2)),
+        total: parseFloat(total.toFixed(2)),
+        cupom: cupomAplicado,
+        canceladoEm: null,
+    };
+    pedidos.push(novoPedido);
+
+    // PASSO 6: retornar 201 com dados do cartão mock
+    return res.status(201).json({
+        pedido: novoPedido,
+        pagamento: {
+            metodo: metodoPagamento,
+            bandeira: 'Visa',
+            ultimos4Digitos: '1234',
+            parcelas,
+            valorParcela: parseFloat((total / parcelas).toFixed(2)),
+            autorizacao: `AUTH-${Date.now()}`,
+        },
+    });
+};

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { processarPagamentoPix, processarPagamentoBoleto } from '../controllers/pagamentosController.js';
+import { processarPagamentoPix, processarPagamentoBoleto, processarPagamentoCartao } from '../controllers/pagamentosController.js';
 import { autenticar } from '../middlewares/autenticar.js';
 
 const router = Router();
@@ -137,5 +137,91 @@ router.post('/pix', autenticar, processarPagamentoPix);
  *         description: Produto não encontrado.
  */
 router.post('/boleto', autenticar, processarPagamentoBoleto);
+
+/**
+ * @swagger
+ * /api/v1/pagamentos/cartao:
+ *   post:
+ *     summary: Processar pagamento via cartão
+ *     description: Cria um novo pedido com pagamento via cartão de débito ou crédito.
+ *     tags:
+ *       - Pagamentos
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - itens
+ *               - cartao
+ *             properties:
+ *               itens:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     produtoId:
+ *                       type: integer
+ *                       example: 1
+ *                     quantidade:
+ *                       type: integer
+ *                       example: 2
+ *               cupom:
+ *                 type: string
+ *                 example: "BEMVINDO10"
+ *               cartao:
+ *                 type: object
+ *                 required:
+ *                   - tipo
+ *                 properties:
+ *                   tipo:
+ *                     type: string
+ *                     enum: [debito, credito]
+ *                     example: "credito"
+ *                   parcelas:
+ *                     type: integer
+ *                     example: 3
+ *     responses:
+ *       201:
+ *         description: Pedido criado com sucesso.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 pedido:
+ *                   type: object
+ *                 pagamento:
+ *                   type: object
+ *                   properties:
+ *                     metodo:
+ *                       type: string
+ *                       example: "cartao_credito"
+ *                     bandeira:
+ *                       type: string
+ *                       example: "Visa"
+ *                     ultimos4Digitos:
+ *                       type: string
+ *                       example: "1234"
+ *                     parcelas:
+ *                       type: integer
+ *                       example: 3
+ *                     valorParcela:
+ *                       type: number
+ *                       example: 11.34
+ *                     autorizacao:
+ *                       type: string
+ *                       example: "AUTH-123456"
+ *       400:
+ *         description: Itens não informados, cartão inválido ou cupom inválido.
+ *       401:
+ *         description: Token ausente ou inválido.
+ *       404:
+ *         description: Produto não encontrado.
+ */
+router.post('/cartao', autenticar, processarPagamentoCartao);
 
 export default router;
