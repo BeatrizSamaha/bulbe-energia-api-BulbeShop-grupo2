@@ -45,7 +45,7 @@ export const processarPagamentoPix = (req, res) => {
     // PASSO 5: montar o pedido e salvar no array
     const novoPedido = {
         id: pedidos.length + 1,
-        usuarioId: req.usuario.id,
+        usuarioId: req.usuario.sub,
         data: new Date().toISOString(),
         status: 'ativo',
         metodoPagamento: 'pix',
@@ -114,7 +114,7 @@ export const processarPagamentoBoleto = (req, res) => {
     // PASSO 5: montar o pedido e salvar no array
     const novoPedido = {
         id: pedidos.length + 1,
-        usuarioId: req.usuario.id,
+        usuarioId: req.usuario.sub,
         data: new Date().toISOString(),
         status: 'ativo',
         metodoPagamento: 'boleto',
@@ -193,7 +193,7 @@ export const processarPagamentoCartao = (req, res) => {
     // PASSO 5: montar o pedido e salvar
     const novoPedido = {
         id: pedidos.length + 1,
-        usuarioId: req.usuario.id,
+        usuarioId: req.usuario.sub,
         data: new Date().toISOString(),
         status: 'ativo',
         metodoPagamento,
