@@ -10,7 +10,6 @@ import cuponsRouter from "./routes/cupons.js";
 import lojasRouter from "./routes/lojas.js";
 import carrinhoRouter from "./routes/carrinho.js";
 import pedidosRouter from "./routes/pedidos.js";
-import pagamentosRouter from "./routes/pagamentos.js";
 import favoritosRouter from "./routes/favoritos.js";
 
 const app = express();
@@ -52,7 +51,6 @@ app.use("/api/v1/cupons", cuponsRouter);
 app.use("/api/v1/lojas-parceiras", lojasRouter);
 app.use("/api/v1/carrinho", carrinhoRouter);
 app.use("/api/v1/pedidos", pedidosRouter);
-app.use("/api/v1/pagamentos", pagamentosRouter);
 app.use("/api/v1/favoritos", favoritosRouter);
 
 const PORT = process.env.PORT || 3000;
