@@ -58,7 +58,9 @@ export const iniciarCheckout = (req, res) => {
                 return res.status(422).json({ erro: 'Cupom inválido ou expirado.' });
             }
 
-            desconto = cupomEncontrado.desconto; // fix: campo padronizado para desconto
+            desconto = cupomEncontrado.tipo === '%'
+                ? subtotal * (cupomEncontrado.desconto / 100)
+                : cupomEncontrado.desconto;
             cupomAplicado = codigoCupom;
         }
 
@@ -156,7 +158,9 @@ export const aplicarCupom = (req, res) => {
             return res.status(422).json({ mensagem: "Este cupom já foi utilizado." });
         }
 
-        const desconto = (pedido.subtotal * cupom.desconto) / 100; // fix: campo padronizado para desconto
+        const desconto = cupom.tipo === '%'
+            ? (pedido.subtotal * cupom.desconto) / 100
+            : cupom.desconto;
         pedido.cupom = cupom.codigo;
         pedido.desconto = Number(desconto.toFixed(2));
         pedido.total = Number(Math.max(pedido.subtotal - desconto, 0).toFixed(2));
