@@ -13,7 +13,7 @@ export const processarPagamentoPix = (req, res) => {
     // PASSO 2: para cada item, buscar o produto e validar que existe
     const itensPedido = [];
     for (const item of itens) {
-        const produto = produtos.find((p) => p.id === item.produtoId);
+        const produto = produtos.find((p) => p.id === Number(item.produtoId));
         if (!produto) {
             return res.status(404).json({ mensagem: `Produto ${item.produtoId} não encontrado.` });
         }
