@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { adicionarItem, atualizarQuantidade, removerItem } from '../controllers/carrinhoController.js';
+import { listarItens, adicionarItem, atualizarQuantidade, removerItem } from '../controllers/carrinhoController.js';
 import { autenticar } from '../middlewares/autenticar.js';
 
 const router = Router();
@@ -155,6 +155,7 @@ const router = Router();
  *       '500':
  *         description: Erro interno do servidor.
  */
+router.get('/', autenticar, listarItens);
 router.post('/itens', autenticar, adicionarItem);
 router.patch('/itens/:id', autenticar, atualizarQuantidade);
 router.delete('/itens/:id', autenticar, removerItem);
