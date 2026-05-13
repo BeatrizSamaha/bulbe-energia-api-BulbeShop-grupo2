@@ -137,3 +137,8 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Banco de dados SQLite
+bulbe.db
+bulbe.db-shm
+bulbe.db-wal
