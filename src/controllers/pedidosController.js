@@ -4,7 +4,7 @@ import { cupons } from "../data/cupons.js";
 
 export const buscarPedidoPorId = (req, res) => {
     const { id } = req.params;
-    const usuarioLogadoId = req.usuario?.id;
+    const usuarioLogadoId = req.usuario?.sub;
     const pedido = pedidos.find((p) => p.id === Number(id));
 
     if (!pedido) {
@@ -22,7 +22,7 @@ export const buscarPedidoPorId = (req, res) => {
 
 export const listarPedidos = (req, res) => {
     try {
-        const usuarioId = req.usuario.id;
+        const usuarioId = req.usuario.sub;
         const meusPedidos = pedidos.filter((p) => p.usuarioId === usuarioId);
         const pedidosOrdenados = meusPedidos.sort(
             (a, b) => new Date(b.data) - new Date(a.data),
@@ -35,14 +35,16 @@ export const listarPedidos = (req, res) => {
 
 export const iniciarCheckout = (req, res) => {
     try {
-        const usuarioId = req.usuario.id;
+        const usuarioId = req.usuario.sub;
         const { cupom: codigoCupom } = req.body;
 
-        if (carrinho.length === 0) {
+        const itensDoUsuario = carrinho.filter((item) => item.usuarioId === usuarioId);
+
+        if (itensDoUsuario.length === 0) {
             return res.status(422).json({ erro: 'O carrinho está vazio.' });
         }
 
-        const subtotal = carrinho.reduce((acc, item) => {
+        const subtotal = itensDoUsuario.reduce((acc, item) => {
             return acc + item.price * item.quantidade;
         }, 0);
 
@@ -58,7 +60,9 @@ export const iniciarCheckout = (req, res) => {
                 return res.status(422).json({ erro: 'Cupom inválido ou expirado.' });
             }
 
-            desconto = cupomEncontrado.desconto; // fix: campo padronizado para desconto
+            desconto = cupomEncontrado.tipo === '%'
+                ? subtotal * (cupomEncontrado.desconto / 100)
+                : cupomEncontrado.desconto;
             cupomAplicado = codigoCupom;
         }
 
@@ -70,7 +74,7 @@ export const iniciarCheckout = (req, res) => {
             data: new Date().toISOString(),
             status: 'ativo',
             metodoPagamento: null,
-            itens: carrinho.map((item) => ({ ...item })),
+            itens: itensDoUsuario.map((item) => ({ ...item })),
             subtotal: Number(subtotal.toFixed(2)),
             desconto: Number(desconto.toFixed(2)),
             total: Number(total.toFixed(2)),
@@ -79,7 +83,9 @@ export const iniciarCheckout = (req, res) => {
         };
 
         pedidos.push(novoPedido);
-        carrinho.splice(0, carrinho.length);
+        for (let i = carrinho.length - 1; i >= 0; i--) {
+            if (carrinho[i].usuarioId === usuarioId) carrinho.splice(i, 1);
+        }
 
         return res.status(201).json(novoPedido);
     } catch (error) {
@@ -90,7 +96,7 @@ export const iniciarCheckout = (req, res) => {
 export const cancelarPedido = (req, res) => {
     try {
         const { id } = req.params;
-        const usuarioId = req.usuario.id;
+        const usuarioId = req.usuario.sub;
         const pedido = pedidos.find((p) => p.id === Number(id));
 
         if (!pedido) {
@@ -122,7 +128,7 @@ export const aplicarCupom = (req, res) => {
     try {
         const { id } = req.params;
         const { codigo } = req.body;
-        const usuarioId = req.usuario.id;
+        const usuarioId = req.usuario.sub;
 
         const pedido = pedidos.find((p) => p.id === Number(id));
 
@@ -156,7 +162,9 @@ export const aplicarCupom = (req, res) => {
             return res.status(422).json({ mensagem: "Este cupom já foi utilizado." });
         }
 
-        const desconto = (pedido.subtotal * cupom.desconto) / 100; // fix: campo padronizado para desconto
+        const desconto = cupom.tipo === '%'
+            ? (pedido.subtotal * cupom.desconto) / 100
+            : cupom.desconto;
         pedido.cupom = cupom.codigo;
         pedido.desconto = Number(desconto.toFixed(2));
         pedido.total = Number(Math.max(pedido.subtotal - desconto, 0).toFixed(2));
