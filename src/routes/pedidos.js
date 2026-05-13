@@ -6,6 +6,11 @@ import {
     cancelarPedido,
     aplicarCupom,
 } from "../controllers/pedidosController.js";
+import {
+    processarPagamentoPix,
+    processarPagamentoBoleto,
+    processarPagamentoCartao,
+} from "../controllers/pagamentosController.js";
 import { autenticar } from "../middlewares/autenticar.js";
 
 const router = Router();
@@ -149,5 +154,9 @@ router.patch("/:id/cancelar", autenticar, cancelarPedido);
  *         description: Erro interno do servidor.
  */
 router.post("/:id/cupom", autenticar, aplicarCupom);
+
+router.post("/:id/pagamento/pix", autenticar, processarPagamentoPix);
+router.post("/:id/pagamento/boleto", autenticar, processarPagamentoBoleto);
+router.post("/:id/pagamento/cartao", autenticar, processarPagamentoCartao);
 
 export default router;
