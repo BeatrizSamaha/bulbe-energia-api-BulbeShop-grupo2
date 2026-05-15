@@ -1,38 +1,38 @@
-import { produtos } from '../data/produtos.js';
+import db from '../db/conexao.js';
 
-// GET /api/v1/produtos  
+const parseProduto = (p) => ({
+  ...p,
+  variations: p.variations ? JSON.parse(p.variations) : [],
+});
+
 export const listarProdutos = (req, res) => {
   try {
     const { busca, categoria, page, limit } = req.query;
-    let resultado = produtos;
 
-    // Filtro por busca no título
+    let query = 'SELECT * FROM produtos WHERE 1=1';
+    const params = [];
+
     if (busca) {
-      const termo = busca.toLowerCase();
-      resultado = resultado.filter((produto) =>
-        produto.title.toLowerCase().includes(termo)
-      );
+      query += ' AND LOWER(title) LIKE LOWER(?)';
+      params.push(`%${busca}%`);
     }
 
-    // Filtro por categoria case-insensitive
-    // Filtro por categoria case-insensitive [fix]
     if (categoria) {
-      const termo = categoria.toLowerCase().trim();
-      resultado = resultado.filter((produto) =>
-        produto.category.toLowerCase().trim() === termo
-      );
+      query += ' AND LOWER(category) = LOWER(?)';
+      params.push(categoria.trim());
     }
 
-    // Paginação 
+    const todos = db.prepare(query).all(...params).map(parseProduto);
+
     const paginaAtual = Math.max(1, parseInt(page) || 1);
     const itensPorPagina = Math.min(100, Math.max(1, parseInt(limit) || 20));
-    const total = resultado.length;
+    const total = todos.length;
     const totalPages = Math.ceil(total / itensPorPagina);
     const inicio = (paginaAtual - 1) * itensPorPagina;
     const fim = inicio + itensPorPagina;
 
     return res.status(200).json({
-      data: resultado.slice(inicio, fim),
+      data: todos.slice(inicio, fim),
       total,
       page: paginaAtual,
       limit: itensPorPagina,
@@ -43,23 +43,21 @@ export const listarProdutos = (req, res) => {
   }
 };
 
-// GET /api/v1/produtos/:id
 export const buscarProdutoPorId = (req, res) => {
   try {
     const id = Number(req.params.id);
 
-    // fix: valida se o ID é um número válido
     if (!Number.isInteger(id) || id <= 0) {
       return res.status(400).json({ erro: 'O ID informado é inválido.' });
     }
 
-    const produto = produtos.find((p) => p.id === id);
+    const produto = db.prepare('SELECT * FROM produtos WHERE id = ?').get(id);
 
     if (!produto) {
       return res.status(404).json({ erro: 'Produto não encontrado.' });
     }
 
-    res.status(200).json(produto);
+    res.status(200).json(parseProduto(produto));
   } catch (error) {
     res.status(500).json({ erro: 'Erro interno ao buscar produto' });
   }
