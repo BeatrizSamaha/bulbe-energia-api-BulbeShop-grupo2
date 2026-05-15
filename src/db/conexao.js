@@ -1,0 +1,97 @@
+import Database from 'better-sqlite3';
+import { join, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname  = dirname(__filename);
+
+const DB_PATH = join(__dirname, '..', '..', 'bulbe.db');
+
+const db = new Database(DB_PATH);
+
+db.pragma('journal_mode = WAL');
+db.pragma('foreign_keys = ON');
+
+db.exec(`
+  CREATE TABLE IF NOT EXISTS usuarios (
+    id     INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome   TEXT    NOT NULL,
+    email  TEXT    NOT NULL UNIQUE,
+    senha  TEXT    NOT NULL,
+    papel  TEXT    NOT NULL DEFAULT 'cliente'
+           CHECK (papel IN ('admin', 'cliente')),
+    pontos INTEGER NOT NULL DEFAULT 0
+  );
+
+  CREATE TABLE IF NOT EXISTS categorias (
+    id   INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome TEXT    NOT NULL UNIQUE,
+    slug TEXT    NOT NULL UNIQUE
+  );
+
+  CREATE TABLE IF NOT EXISTS produtos (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    title       TEXT    NOT NULL,
+    description TEXT,
+    price       REAL    NOT NULL,
+    category    TEXT,
+    stock       INTEGER NOT NULL DEFAULT 0,
+    image       TEXT,
+    rating      REAL,
+    variations  TEXT
+  );
+
+  CREATE TABLE IF NOT EXISTS lojas (
+    id       INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome     TEXT    NOT NULL,
+    endereco TEXT,
+    telefone TEXT,
+    horario  TEXT,
+    produtos TEXT,
+    estado   TEXT,
+    ativa    INTEGER NOT NULL DEFAULT 1
+  );
+
+  CREATE TABLE IF NOT EXISTS cupons (
+    id       INTEGER PRIMARY KEY AUTOINCREMENT,
+    codigo   TEXT    NOT NULL UNIQUE,
+    desconto REAL    NOT NULL,
+    tipo     TEXT    NOT NULL CHECK (tipo IN ('%', 'R$')),
+    validade TEXT,
+    ativo    INTEGER NOT NULL DEFAULT 1
+  );
+
+  CREATE TABLE IF NOT EXISTS carrinho_itens (
+    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+    usuario_id INTEGER NOT NULL REFERENCES usuarios(id),
+    produto_id INTEGER NOT NULL REFERENCES produtos(id),
+    title      TEXT    NOT NULL,
+    price      REAL    NOT NULL,
+    image      TEXT,
+    quantidade INTEGER NOT NULL DEFAULT 1
+  );
+
+  CREATE TABLE IF NOT EXISTS pedidos (
+    id               INTEGER PRIMARY KEY AUTOINCREMENT,
+    usuario_id       INTEGER NOT NULL REFERENCES usuarios(id),
+    data             TEXT    NOT NULL DEFAULT (datetime('now')),
+    status           TEXT    NOT NULL DEFAULT 'ativo'
+                     CHECK (status IN ('ativo', 'concluido', 'cancelado')),
+    metodo_pagamento TEXT,
+    itens            TEXT,
+    subtotal         REAL    NOT NULL DEFAULT 0,
+    desconto         REAL    NOT NULL DEFAULT 0,
+    total            REAL    NOT NULL DEFAULT 0,
+    cupom            TEXT,
+    cancelado_em     TEXT
+  );
+
+  CREATE TABLE IF NOT EXISTS favoritos (
+    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+    usuario_id INTEGER NOT NULL REFERENCES usuarios(id),
+    produto_id INTEGER NOT NULL REFERENCES produtos(id),
+    UNIQUE (usuario_id, produto_id)
+  );
+`);
+
+export default db;
