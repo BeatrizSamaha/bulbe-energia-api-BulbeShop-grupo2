@@ -17,7 +17,6 @@ const router = Router();
 
 /**
  * @openapi
- *
  * /api/v1/pedidos/{id}:
  *   get:
  *     summary: Buscar pedido por ID
@@ -155,6 +154,172 @@ router.patch("/:id/cancelar", autenticar, cancelarPedido);
  */
 router.patch("/:id/cupom", autenticar, aplicarCupom);
 
+/**
+ * @openapi
+ * /api/v1/pedidos/{id}/pagamento/pix:
+ *   post:
+ *     summary: Processar pagamento via PIX
+ *     description: Confirma o pagamento de um pedido existente via PIX. Retorna QR Code e chave PIX.
+ *     tags:
+ *       - Pagamentos
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID do pedido a ser pago.
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Pagamento processado com sucesso.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 pedido:
+ *                   type: object
+ *                 pagamento:
+ *                   type: object
+ *                   properties:
+ *                     metodo:
+ *                       type: string
+ *                       example: pix
+ *                     chavePix:
+ *                       type: string
+ *                       example: bulbeshop@pix.com.br
+ *                     qrCode:
+ *                       type: string
+ *                     expiracao:
+ *                       type: string
+ *                       format: date-time
+ *       401:
+ *         description: Token ausente ou inválido.
+ *       403:
+ *         description: Pedido não pertence ao usuário autenticado.
+ *       404:
+ *         description: Pedido não encontrado.
+ *       422:
+ *         description: Pedido já foi pago.
+ *
+ * /api/v1/pedidos/{id}/pagamento/boleto:
+ *   post:
+ *     summary: Processar pagamento via Boleto
+ *     description: Confirma o pagamento de um pedido existente via boleto bancário.
+ *     tags:
+ *       - Pagamentos
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID do pedido a ser pago.
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Pagamento processado com sucesso.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 pedido:
+ *                   type: object
+ *                 pagamento:
+ *                   type: object
+ *                   properties:
+ *                     metodo:
+ *                       type: string
+ *                       example: boleto
+ *                     codigoBarras:
+ *                       type: string
+ *                     linhaDigitavel:
+ *                       type: string
+ *                     vencimento:
+ *                       type: string
+ *                       format: date-time
+ *       401:
+ *         description: Token ausente ou inválido.
+ *       403:
+ *         description: Pedido não pertence ao usuário autenticado.
+ *       404:
+ *         description: Pedido não encontrado.
+ *       422:
+ *         description: Pedido já foi pago.
+ *
+ * /api/v1/pedidos/{id}/pagamento/cartao:
+ *   post:
+ *     summary: Processar pagamento via Cartão
+ *     description: Confirma o pagamento de um pedido existente via cartão de débito ou crédito.
+ *     tags:
+ *       - Pagamentos
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID do pedido a ser pago.
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - cartao
+ *             properties:
+ *               cartao:
+ *                 type: object
+ *                 required:
+ *                   - tipo
+ *                 properties:
+ *                   tipo:
+ *                     type: string
+ *                     enum: [debito, credito]
+ *                     example: credito
+ *                   parcelas:
+ *                     type: integer
+ *                     example: 3
+ *     responses:
+ *       200:
+ *         description: Pagamento processado com sucesso.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 pedido:
+ *                   type: object
+ *                 pagamento:
+ *                   type: object
+ *                   properties:
+ *                     metodo:
+ *                       type: string
+ *                       example: cartao_credito
+ *                     parcelas:
+ *                       type: integer
+ *                     valorParcela:
+ *                       type: number
+ *                     autorizacao:
+ *                       type: string
+ *       400:
+ *         description: Dados do cartão inválidos.
+ *       401:
+ *         description: Token ausente ou inválido.
+ *       403:
+ *         description: Pedido não pertence ao usuário autenticado.
+ *       404:
+ *         description: Pedido não encontrado.
+ *       422:
+ *         description: Pedido já foi pago.
+ */
 router.post("/:id/pagamento/pix", autenticar, processarPagamentoPix);
 router.post("/:id/pagamento/boleto", autenticar, processarPagamentoBoleto);
 router.post("/:id/pagamento/cartao", autenticar, processarPagamentoCartao);
