@@ -12,6 +12,7 @@ const db = new Database(DB_PATH);
 db.pragma('journal_mode = WAL');
 db.pragma('foreign_keys = ON');
 
+// criaçao das tabelas 
 db.exec(`
   CREATE TABLE IF NOT EXISTS usuarios (
     id     INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -68,7 +69,8 @@ db.exec(`
     title      TEXT    NOT NULL,
     price      REAL    NOT NULL,
     image      TEXT,
-    quantidade INTEGER NOT NULL DEFAULT 1
+    quantidade INTEGER NOT NULL DEFAULT 1,
+    UNIQUE (usuario_id, produto_id)
   );
 
   CREATE TABLE IF NOT EXISTS pedidos (
@@ -93,5 +95,16 @@ db.exec(`
     UNIQUE (usuario_id, produto_id)
   );
 `);
+
+// Migrações (banco já existente) 
+// Adiciona a coluna 'itens' na tabela pedidos caso o banco tenha sido criado
+// com o schema antigo (sem essa coluna). O CREATE TABLE IF NOT EXISTS não
+// atualiza tabelas já existentes, por isso esta verificação é necessária.
+const colunasPedidos = db.pragma('table_info(pedidos)').map((c) => c.name);
+
+if (!colunasPedidos.includes('itens')) {
+  db.exec(`ALTER TABLE pedidos ADD COLUMN itens TEXT;`);
+  console.log('[DB] Migração aplicada: coluna "itens" adicionada à tabela pedidos.');
+}
 
 export default db;
