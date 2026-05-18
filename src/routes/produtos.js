@@ -121,7 +121,7 @@ const router = Router();
  */
 
 // Rota pública [IMP-30]
-router.get('/', listarProdutos);
+router.get('/', autenticar, listarProdutos);
 // Rota protegida
 router.get('/:id', autenticar, buscarProdutoPorId);
 
