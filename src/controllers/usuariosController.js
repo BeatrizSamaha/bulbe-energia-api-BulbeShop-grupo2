@@ -1,4 +1,5 @@
 import db from '../db/conexao.js';
+import bcrypt from 'bcryptjs';
 
 export const verPerfil = (req, res) => {
   const usuario = db.prepare('SELECT id, nome, email, papel, pontos FROM usuarios WHERE id = ?').get(req.usuario.sub);
