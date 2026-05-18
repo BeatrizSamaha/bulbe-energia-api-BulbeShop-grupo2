@@ -15,20 +15,27 @@ const formatarPedido = (row) => ({
 });
 
 export const buscarPedidoPorId = (req, res) => {
-  const { id } = req.params;
-  const usuarioLogadoId = req.usuario?.sub;
-
-  const row = db.prepare('SELECT * FROM pedidos WHERE id = ?').get(Number(id));
+  try {
+    const { id } = req.params;
+    const usuarioLogadoId = req.usuario?.sub;
+    const idNum = Number(id);
+    if (!Number.isInteger(idNum) || idNum <= 0) {
+    return res.status(400).json({ erro: 'ID de pedido inválido.' });
+}
+const row = db.prepare('SELECT * FROM pedidos WHERE id = ?').get(idNum);
 
   if (!row) {
-    return res.status(404).json({ mensagem: 'Pedido não encontrado' });
+    return res.status(404).json({ erro: 'Pedido não encontrado.' })
   }
 
   if (row.usuario_id !== Number(usuarioLogadoId)) {
-    return res.status(403).json({ mensagem: 'Acesso negado: este pedido não pertence a você' });
+    return res.status(403).json({ erro: 'Acesso negado: este pedido não pertence a você.' });
   }
 
   return res.status(200).json(formatarPedido(row));
+} catch (error) {
+return res.status(500).json({ erro: 'Erro interno ao buscar pedido.' });
+}
 };
 
 export const listarPedidos = (req, res) => {
