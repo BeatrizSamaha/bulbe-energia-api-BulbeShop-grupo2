@@ -78,7 +78,7 @@ router.get('/perfil', autenticar, verPerfil);
 router.put('/perfil', autenticar, editarPerfil);
 
 /**
- * @swagger
+ * @openapi
  * /api/v1/usuarios/pontos:
  *   get:
  *     summary: Consultar pontos Bulbe do usuário logado
