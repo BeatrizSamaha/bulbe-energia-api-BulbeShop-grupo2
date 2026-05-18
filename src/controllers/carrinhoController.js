@@ -8,7 +8,7 @@ export const listarItens = (req, res) => {
         id:    item.produto_id,
         title: item.title,
         price: item.price,
-        image: item.image,
+        img: item.image,
         qty:   item.quantidade,
       }));
 
