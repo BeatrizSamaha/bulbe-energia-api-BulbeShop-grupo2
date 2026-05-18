@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { listarLojas, buscarLojaPorId } from '../controllers/lojasController.js';
+import { autenticar } from '../middlewares/autenticar.js';
 
 const router = Router();
 
@@ -76,7 +77,7 @@ const router = Router();
  *       '500':
  *         description: Erro interno do servidor.
  */
-router.get('/', listarLojas);
-router.get('/:id', buscarLojaPorId);
+router.get('/', autenticar, listarLojas);
+router.get('/:id', autenticar, buscarLojaPorId);
 
 export default router;
