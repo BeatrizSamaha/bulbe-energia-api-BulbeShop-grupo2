@@ -15,20 +15,27 @@ const formatarPedido = (row) => ({
 });
 
 export const buscarPedidoPorId = (req, res) => {
-  const { id } = req.params;
-  const usuarioLogadoId = req.usuario?.sub;
-
-  const row = db.prepare('SELECT * FROM pedidos WHERE id = ?').get(Number(id));
+  try {
+    const { id } = req.params;
+    const usuarioLogadoId = req.usuario?.sub;
+    const idNum = Number(id);
+    if (!Number.isInteger(idNum) || idNum <= 0) {
+    return res.status(400).json({ erro: 'ID de pedido inválido.' });
+}
+const row = db.prepare('SELECT * FROM pedidos WHERE id = ?').get(idNum);
 
   if (!row) {
-    return res.status(404).json({ mensagem: 'Pedido não encontrado' });
+    return res.status(404).json({ erro: 'Pedido não encontrado.' })
   }
 
   if (row.usuario_id !== Number(usuarioLogadoId)) {
-    return res.status(403).json({ mensagem: 'Acesso negado: este pedido não pertence a você' });
+    return res.status(403).json({ erro: 'Acesso negado: este pedido não pertence a você.' });
   }
 
   return res.status(200).json(formatarPedido(row));
+} catch (error) {
+return res.status(500).json({ erro: 'Erro interno ao buscar pedido.' });
+}
 };
 
 export const listarPedidos = (req, res) => {
@@ -39,7 +46,7 @@ export const listarPedidos = (req, res) => {
 
     res.status(200).json(pedidos);
   } catch (error) {
-    res.status(500).json({ mensagem: 'Erro ao buscar histórico de pedidos.' });
+    res.status(500).json({ erro: 'Erro ao buscar histórico de pedidos.' });
   }
 };
 
@@ -98,24 +105,24 @@ export const cancelarPedido = (req, res) => {
     const row = db.prepare('SELECT * FROM pedidos WHERE id = ?').get(Number(id));
 
     if (!row) {
-      return res.status(404).json({ mensagem: 'Pedido não encontrado.' });
+      return res.status(404).json({ erro: 'Pedido não encontrado.' });
     }
 
     if (row.usuario_id !== usuarioId) {
-      return res.status(403).json({ mensagem: 'Você não tem permissão para cancelar este pedido.' });
+      return res.status(403).json({ erro: 'Você não tem permissão para cancelar este pedido.' });
     }
 
     if (row.status === 'concluido' || row.status === 'cancelado') {
-      return res.status(422).json({ mensagem: `Não é possível cancelar um pedido que já está ${row.status}.` });
+      return res.status(422).json({ erro: `Não é possível cancelar um pedido que já está ${row.status}.` });
     }
 
     const canceladoEm = new Date().toISOString();
     db.prepare('UPDATE pedidos SET status = ?, cancelado_em = ? WHERE id = ?').run('cancelado', canceladoEm, Number(id));
 
     const pedidoAtualizado = db.prepare('SELECT * FROM pedidos WHERE id = ?').get(Number(id));
-    return res.status(200).json({ mensagem: 'Pedido cancelado com sucesso', pedido: formatarPedido(pedidoAtualizado) });
+    return res.status(200).json({ erro: 'Pedido cancelado com sucesso', pedido: formatarPedido(pedidoAtualizado) });
   } catch (error) {
-    return res.status(500).json({ mensagem: 'Erro ao cancelar pedido.' });
+    return res.status(500).json({ erro: 'Erro ao cancelar pedido.' });
   }
 };
 
@@ -128,27 +135,27 @@ export const aplicarCupom = (req, res) => {
     const row = db.prepare('SELECT * FROM pedidos WHERE id = ?').get(Number(id));
 
     if (!row) {
-      return res.status(404).json({ mensagem: 'Pedido não encontrado.' });
+      return res.status(404).json({ erro: 'Pedido não encontrado.' });
     }
 
     if (row.usuario_id !== usuarioId) {
-      return res.status(403).json({ mensagem: 'Você não tem permissão para alterar esse pedido.' });
+      return res.status(403).json({ erro: 'Você não tem permissão para alterar esse pedido.' });
     }
 
     if (row.status === 'concluido' || row.status === 'cancelado') {
-      return res.status(422).json({ mensagem: 'Não é possível aplicar cupom neste pedido.' });
+      return res.status(422).json({ erro: 'Não é possível aplicar cupom neste pedido.' });
     }
 
     const cupom = db.prepare('SELECT * FROM cupons WHERE codigo = ? AND ativo = 1').get(codigo);
 
     if (!cupom) {
-      return res.status(404).json({ mensagem: 'Cupom não encontrado ou inativo.' });
+      return res.status(404).json({ erro: 'Cupom não encontrado ou inativo.' });
     }
 
     const cupomJaUsado = db.prepare('SELECT 1 FROM pedidos WHERE usuario_id = ? AND cupom = ?').get(usuarioId, cupom.codigo);
 
     if (cupomJaUsado) {
-      return res.status(422).json({ mensagem: 'Este cupom já foi utilizado.' });
+      return res.status(422).json({ erro: 'Este cupom já foi utilizado.' });
     }
 
     const desconto = cupom.tipo === '%'
@@ -162,6 +169,6 @@ export const aplicarCupom = (req, res) => {
     const pedidoAtualizado = db.prepare('SELECT * FROM pedidos WHERE id = ?').get(Number(id));
     return res.status(200).json({ mensagem: 'Cupom aplicado com sucesso.', pedido: formatarPedido(pedidoAtualizado) });
   } catch (error) {
-    return res.status(500).json({ mensagem: 'Erro ao aplicar o cupom.' });
+    return res.status(500).json({ erro: 'Erro ao aplicar o cupom.' });
   }
 };

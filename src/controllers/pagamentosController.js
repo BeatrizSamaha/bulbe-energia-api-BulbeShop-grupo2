@@ -20,17 +20,17 @@ const validarPedido = (id, usuarioId, res) => {
   const row = db.prepare('SELECT * FROM pedidos WHERE id = ?').get(Number(id));
 
   if (!row) {
-    res.status(404).json({ mensagem: 'Pedido não encontrado.' });
+    res.status(404).json({ erro: 'Pedido não encontrado.' });
     return null;
   }
 
   if (row.usuario_id !== usuarioId) {
-    res.status(403).json({ mensagem: 'Acesso negado.' });
+    res.status(403).json({ erro:'Acesso negado.' });
     return null;
   }
 
   if (row.metodo_pagamento !== null) {
-    res.status(422).json({ mensagem: 'Este pedido já foi pago.' });
+    res.status(422).json({ erro: 'Este pedido já foi pago.' });
     return null;
   }
 
@@ -97,7 +97,7 @@ export const processarPagamentoCartao = (req, res) => {
   }
 
   if (!['debito', 'credito'].includes(cartao.tipo)) {
-    return res.status(400).json({ mensagem: 'Tipo de cartão inválido. Use "debito" ou "credito".' });
+    return res.status(400).json({ erro: 'Tipo de cartão inválido. Use "debito" ou "credito".' });
   }
 
   const row = validarPedido(req.params.id, usuarioId, res);
