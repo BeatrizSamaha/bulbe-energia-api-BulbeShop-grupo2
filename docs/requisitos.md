@@ -62,6 +62,7 @@
 | GET    | /api/v1/cupons                          | RF-16 | 200             |
 | GET    | /api/v1/lojas-parceiras                 | RF-17 | 200             |
 | POST   | /api/v1/auth/login                      | RF-18 | 200, 401        |
+| GET    | /api/v1/cupons/:codigo                  | RF-16 | 200, 404, 410   |
 
 ---
 
