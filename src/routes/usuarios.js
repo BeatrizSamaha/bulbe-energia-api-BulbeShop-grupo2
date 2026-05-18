@@ -5,7 +5,7 @@ import { autenticar } from '../middlewares/autenticar.js';
 const router = Router();
 
 /**
- * @swagger
+ * @openapi
  * /api/v1/usuarios/perfil:
  *   get:
  *     summary: Visualizar perfil do usuário logado
