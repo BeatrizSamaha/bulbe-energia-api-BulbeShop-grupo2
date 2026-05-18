@@ -44,7 +44,7 @@ const router = Router();
 router.get('/perfil', autenticar, verPerfil);
 
 /**
- * @swagger
+ * @openapi
  * /api/v1/usuarios/perfil:
  *   put:
  *     summary: Editar perfil do usuário logado
