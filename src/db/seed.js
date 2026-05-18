@@ -16,7 +16,8 @@ db.exec(`
   );
 `);
 
-// ── Usuários (senhas com hash bcrypt) ─────────────────────────────────────────
+
+//  Usuários (senhas com hash bcrypt) 
 const senhaHash = bcrypt.hashSync('senha123', 10);
 
 const inserirUsuario = db.prepare(`
@@ -31,7 +32,7 @@ inserirUsuario.run({ nome: 'Pedro Paulucci',  email: 'pedro.paulucci@bulbeshop.c
 inserirUsuario.run({ nome: 'Tiago Heitzmann', email: 'tiago.heitzmann@bulbeshop.com.br', senha: senhaHash, papel: 'admin',   pontos: 10    });
 inserirUsuario.run({ nome: 'Tiago Lage',      email: 'tiago.lage@bulbeshop.com.br',      senha: senhaHash, papel: 'cliente', pontos: 10    });
 
-// ── Categorias ────────────────────────────────────────────────────────────────
+// Categorias
 const inserirCategoria = db.prepare(`
   INSERT INTO categorias (nome, slug) VALUES (@nome, @slug)
 `);
@@ -41,7 +42,7 @@ inserirCategoria.run({ nome: 'Eletrônicos',         slug: 'eletronicos'        
 inserirCategoria.run({ nome: 'Conforto',            slug: 'conforto'            });
 inserirCategoria.run({ nome: 'Educação',            slug: 'educacao'            });
 
-// ── Produtos ──────────────────────────────────────────────────────────────────
+//  Produtos 
 const inserirProduto = db.prepare(`
   INSERT INTO produtos (title, description, price, category, stock, image, rating, variations)
   VALUES (@title, @description, @price, @category, @stock, @image, @rating, @variations)
@@ -53,7 +54,7 @@ inserirProduto.run({ title: 'Garrafa de água Tupperware',   description: 'Garra
 inserirProduto.run({ title: 'Ventilador de mesa Britânia',  description: 'Ventilador de mesa com 3 velocidades e oscilação.',            price: 279.00, category: 'Eletrônicos',         stock: 15,  image: 'ventilador-mesa-britania.jpg',      rating: 4.2, variations: JSON.stringify(['Branco', 'Cinza', 'Prata'])     });
 inserirProduto.run({ title: 'Energia: Fique por dentro',    description: 'Livro sobre eficiência energética e energias renováveis.',     price: 45.90,  category: 'Educação',            stock: 60,  image: 'livro-energia-fique-por-dentro.jpg', rating: 4.0, variations: JSON.stringify(['Capa Dura', 'Brochura'])        });
 
-// ── Lojas ─────────────────────────────────────────────────────────────────────
+//  Lojas 
 const inserirLoja = db.prepare(`
   INSERT INTO lojas (nome, endereco, telefone, horario, produtos, estado, ativa)
   VALUES (@nome, @endereco, @telefone, @horario, @produtos, @estado, @ativa)
@@ -63,7 +64,7 @@ inserirLoja.run({ nome: 'SolarTech Equipamentos', endereco: 'Av. Paulista, 1000 
 inserirLoja.run({ nome: 'Eólica Sul Peças',        endereco: 'Rua das Araucárias, 42 - Porto Alegre/RS', telefone: '(51) 98765-4321', horario: 'Seg a Sex: 09h às 17h',                    produtos: JSON.stringify(['Turbinas eólicas', 'Geradores', 'Baterias']),                       estado: 'RS', ativa: 1 });
 inserirLoja.run({ nome: 'Norte Baterias',          endereco: 'Rua do Comércio, 88 - Manaus/AM',          telefone: '(92) 93456-7890', horario: 'Seg a Sex: 08h às 17h | Sáb: 08h às 12h', produtos: JSON.stringify(['Baterias estacionárias', 'Nobreaks', 'Controladores de carga']), estado: 'AM', ativa: 0 });
 
-// ── Cupons ────────────────────────────────────────────────────────────────────
+// Cupons 
 const inserirCupom = db.prepare(`
   INSERT INTO cupons (codigo, desconto, tipo, validade, ativo)
   VALUES (@codigo, @desconto, @tipo, @validade, @ativo)
@@ -74,6 +75,7 @@ inserirCupom.run({ codigo: 'SOLAR20',    desconto: 20, tipo: '%',  validade: '20
 inserirCupom.run({ codigo: 'EXPIRADO5',  desconto:  5, tipo: 'R$', validade: '2024-01-01', ativo: 0 });
 
 // ── Pedidos ───────────────────────────────────────────────────────────────────
+// Pedidos 
 // Regra: se metodo_pagamento está preenchido → status deve ser 'concluido'
 //        se metodo_pagamento é null           → status 'ativo' (aguardando pagamento)
 //        se cancelado                         → status 'cancelado'

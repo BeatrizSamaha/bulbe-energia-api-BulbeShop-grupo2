@@ -1,5 +1,7 @@
 import db from '../db/conexao.js';
 
+const PONTOS_POR_REAL = 1; // 1 ponto para cada R$ 1,00 gasto
+
 const formatarPedido = (row) => ({
   id:              row.id,
   usuarioId:       row.usuario_id,
@@ -35,18 +37,29 @@ const validarPedido = (id, usuarioId, res) => {
   return row;
 };
 
+const concluirPagamento = (pedidoId, usuarioId, metodoPagamento) => {
+  db.prepare('UPDATE pedidos SET metodo_pagamento = ?, status = ? WHERE id = ?')
+    .run(metodoPagamento, 'concluido', pedidoId);
+
+  // Credita pontos Bulbe: 1 ponto por R$ 1,00 gasto
+  const pedido = db.prepare('SELECT total FROM pedidos WHERE id = ?').get(pedidoId);
+  const pontosGanhos = Math.floor(pedido.total * PONTOS_POR_REAL);
+  db.prepare('UPDATE usuarios SET pontos = pontos + ? WHERE id = ?')
+    .run(pontosGanhos, usuarioId);
+
+  return { pedidoAtualizado: db.prepare('SELECT * FROM pedidos WHERE id = ?').get(pedidoId), pontosGanhos };
+};
+
 export const processarPagamentoPix = (req, res) => {
   const usuarioId = req.usuario.sub;
   const row = validarPedido(req.params.id, usuarioId, res);
   if (!row) return;
 
-  db.prepare('UPDATE pedidos SET metodo_pagamento = ?, status = ? WHERE id = ?')
-    .run('pix', 'concluido', row.id);
-
-  const pedidoAtualizado = db.prepare('SELECT * FROM pedidos WHERE id = ?').get(row.id);
+  const { pedidoAtualizado, pontosGanhos } = concluirPagamento(row.id, usuarioId, 'pix');
 
   return res.status(200).json({
     pedido: formatarPedido(pedidoAtualizado),
+    pontosGanhos,
     pagamento: {
       metodo:    'pix',
       chavePix:  'bulbeshop@pix.com.br',
@@ -61,13 +74,11 @@ export const processarPagamentoBoleto = (req, res) => {
   const row = validarPedido(req.params.id, usuarioId, res);
   if (!row) return;
 
-  db.prepare('UPDATE pedidos SET metodo_pagamento = ?, status = ? WHERE id = ?')
-    .run('boleto', 'concluido', row.id);
-
-  const pedidoAtualizado = db.prepare('SELECT * FROM pedidos WHERE id = ?').get(row.id);
+  const { pedidoAtualizado, pontosGanhos } = concluirPagamento(row.id, usuarioId, 'boleto');
 
   return res.status(200).json({
     pedido: formatarPedido(pedidoAtualizado),
+    pontosGanhos,
     pagamento: {
       metodo:         'boleto',
       codigoBarras:   '34191.79001 01043.510047 91020.150008 1 00000003780',
@@ -92,16 +103,14 @@ export const processarPagamentoCartao = (req, res) => {
   const row = validarPedido(req.params.id, usuarioId, res);
   if (!row) return;
 
-  const parcelas       = cartao.tipo === 'credito' ? (cartao.parcelas || 1) : 1;
+  const parcelas        = cartao.tipo === 'credito' ? (cartao.parcelas || 1) : 1;
   const metodoPagamento = cartao.tipo === 'credito' ? 'cartao_credito' : 'cartao_debito';
 
-  db.prepare('UPDATE pedidos SET metodo_pagamento = ?, status = ? WHERE id = ?')
-    .run(metodoPagamento, 'concluido', row.id);
-
-  const pedidoAtualizado = db.prepare('SELECT * FROM pedidos WHERE id = ?').get(row.id);
+  const { pedidoAtualizado, pontosGanhos } = concluirPagamento(row.id, usuarioId, metodoPagamento);
 
   return res.status(200).json({
     pedido: formatarPedido(pedidoAtualizado),
+    pontosGanhos,
     pagamento: {
       metodo:          metodoPagamento,
       status:          'aprovado',
