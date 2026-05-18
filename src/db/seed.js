@@ -16,6 +16,7 @@ db.exec(`
   );
 `);
 
+
 //  Usuários (senhas com hash bcrypt) 
 const senhaHash = bcrypt.hashSync('senha123', 10);
 
@@ -73,6 +74,7 @@ inserirCupom.run({ codigo: 'BEMVINDO10', desconto: 10, tipo: '%',  validade: '20
 inserirCupom.run({ codigo: 'SOLAR20',    desconto: 20, tipo: '%',  validade: '2025-12-31', ativo: 1 });
 inserirCupom.run({ codigo: 'EXPIRADO5',  desconto:  5, tipo: 'R$', validade: '2024-01-01', ativo: 0 });
 
+// ── Pedidos ───────────────────────────────────────────────────────────────────
 // Pedidos 
 // Regra: se metodo_pagamento está preenchido → status deve ser 'concluido'
 //        se metodo_pagamento é null           → status 'ativo' (aguardando pagamento)
