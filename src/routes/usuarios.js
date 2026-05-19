@@ -5,7 +5,7 @@ import { autenticar } from '../middlewares/autenticar.js';
 const router = Router();
 
 /**
- * @openapi
+ * @swagger
  * /api/v1/usuarios/perfil:
  *   get:
  *     summary: Visualizar perfil do usuário logado
@@ -44,7 +44,7 @@ const router = Router();
 router.get('/perfil', autenticar, verPerfil);
 
 /**
- * @openapi
+ * @swagger
  * /api/v1/usuarios/perfil:
  *   put:
  *     summary: Editar perfil do usuário logado
@@ -78,7 +78,7 @@ router.get('/perfil', autenticar, verPerfil);
 router.put('/perfil', autenticar, editarPerfil);
 
 /**
- * @openapi
+ * @swagger
  * /api/v1/usuarios/pontos:
  *   get:
  *     summary: Consultar pontos Bulbe do usuário logado
