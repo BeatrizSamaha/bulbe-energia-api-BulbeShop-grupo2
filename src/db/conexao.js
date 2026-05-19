@@ -106,7 +106,12 @@ db.exec(`
   );
 `);
 
-// Migrações (banco já existente) 
+// Migrações 
+const colunasPedidos2 = db.pragma('table_info(pedidos)').map((c) => c.name);
+if (!colunasPedidos2.includes('endereco_entrega')) {
+  db.exec('ALTER TABLE pedidos ADD COLUMN endereco_entrega TEXT;');
+  console.log('[DB] Migração: coluna "endereco_entrega" adicionada.');
+}
 // Adiciona a coluna 'itens' na tabela pedidos caso o banco tenha sido criado
 // com o schema antigo (sem essa coluna). O CREATE TABLE IF NOT EXISTS não
 // atualiza tabelas já existentes, por isso esta verificação é necessária.
