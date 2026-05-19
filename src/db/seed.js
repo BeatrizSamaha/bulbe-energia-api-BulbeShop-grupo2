@@ -70,8 +70,8 @@ const inserirCupom = db.prepare(`
   VALUES (@codigo, @desconto, @tipo, @validade, @ativo)
 `);
 
-inserirCupom.run({ codigo: 'BEMVINDO10', desconto: 10, tipo: '%',  validade: '2025-12-31', ativo: 1 });
-inserirCupom.run({ codigo: 'SOLAR20',    desconto: 20, tipo: '%',  validade: '2025-12-31', ativo: 1 });
+inserirCupom.run({ codigo: 'BEMVINDO10', desconto: 10, tipo: '%',  validade: '2026-12-31', ativo: 1 });
+inserirCupom.run({ codigo: 'SOLAR20',    desconto: 20, tipo: '%',  validade: '2026-12-31', ativo: 1 });
 inserirCupom.run({ codigo: 'EXPIRADO5',  desconto:  5, tipo: 'R$', validade: '2024-01-01', ativo: 0 });
 
 // ── Pedidos ───────────────────────────────────────────────────────────────────
