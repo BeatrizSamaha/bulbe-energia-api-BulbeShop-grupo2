@@ -18,3 +18,5 @@ router.patch('/usuarios/:id/papel', alterarPapelUsuario);
 router.delete('/usuarios/:id',      deletarUsuario);
 
 export default router;
+
+//fazer swegger
