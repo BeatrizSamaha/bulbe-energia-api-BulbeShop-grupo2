@@ -8,5 +8,10 @@
 //   Nunca commite uma chave secreta real em repositórios Git.
 //   O valor abaixo é exclusivamente para fins didáticos em ambiente local.
 
-export const JWT_SECRET = "bulbe-energia-segredo-dev-2026";
-export const JWT_EXPIRES_IN = "2h";
+import 'dotenv/config';
+
+export const JWT_SECRET =
+    process.env.JWT_SECRET || 'bulbe-energia-segredo-dev-2026';
+
+export const JWT_EXPIRES_IN =
+    process.env.JWT_EXPIRES_IN || '2h';
