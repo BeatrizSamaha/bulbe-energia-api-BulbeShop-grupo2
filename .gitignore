@@ -142,3 +142,8 @@ vite.config.ts.timestamp-*
 bulbe.db
 bulbe.db-shm
 bulbe.db-wal
+
+#.env
+.env
+bulbe.db
+node_modules/
