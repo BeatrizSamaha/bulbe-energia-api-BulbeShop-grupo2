@@ -1,8 +1,25 @@
 import { Router } from 'express';
-import { listarLojas, buscarLojaPorId } from '../controllers/lojasController.js';
+import {
+    listarLojas, buscarLojaPorId,
+    criarLoja, atualizarLoja, deletarLoja,
+} from '../controllers/lojasController.js';
+import { autenticar } from '../middlewares/autenticar.js';
+import { autorizar }  from '../middlewares/autorizar.js';
+import { validar }    from '../middlewares/validar.js';
+import { schemaCriarLoja } from '../validators/schemas.js';
 
 const router = Router();
 
+router.get('/',    listarLojas);
+router.get('/:id', buscarLojaPorId);
+
+router.post('/',
+    autenticar, autorizar('admin'),
+    validar(schemaCriarLoja), criarLoja);
+router.put('/:id',    autenticar, autorizar('admin'), atualizarLoja);
+router.delete('/:id', autenticar, autorizar('admin'), deletarLoja);
+
+export default router;
 /**
  * @openapi
  * components:
@@ -76,7 +93,3 @@ const router = Router();
  *       '500':
  *         description: Erro interno do servidor.
  */
-router.get('/', listarLojas);
-router.get('/:id', buscarLojaPorId);
-
-export default router;
