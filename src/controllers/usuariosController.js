@@ -1,3 +1,4 @@
+
 import bcrypt from 'bcryptjs';
 import db from '../db/conexao.js';
 
@@ -43,4 +44,3 @@ export const consultarPontos = (req, res) => {
 
   return res.status(200).json({ usuario: usuario.nome, pontos: usuario.pontos });
 };
-
