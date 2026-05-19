@@ -1,8 +1,25 @@
 import { Router } from 'express';
-import { listarDisponiveis, buscarCupomPorCodigo } from '../controllers/cuponsController.js';
+import {
+    listarDisponiveis, buscarCupomPorCodigo,
+    criarCupom, atualizarCupom, deletarCupom,
+} from '../controllers/cuponsController.js';
 import { autenticar } from '../middlewares/autenticar.js';
+import { autorizar }  from '../middlewares/autorizar.js';
+import { validar }    from '../middlewares/validar.js';
+import { schemaCriarCupom } from '../validators/schemas.js';
 
 const router = Router();
+
+router.get('/',        listarDisponiveis);
+router.get('/:codigo', buscarCupomPorCodigo);
+
+router.post('/',
+    autenticar, autorizar('admin'),
+    validar(schemaCriarCupom), criarCupom);
+router.put('/:id',  autenticar, autorizar('admin'), atualizarCupom);
+router.delete('/:id', autenticar, autorizar('admin'), deletarCupom);
+
+export default router;
 
 /**
  * @openapi
@@ -79,7 +96,3 @@ const router = Router();
  *       '500':
  *         description: Erro interno do servidor.
  */
-router.get('/', autenticar, listarDisponiveis);
-router.get('/:codigo', autenticar, buscarCupomPorCodigo);
-
-export default router;
