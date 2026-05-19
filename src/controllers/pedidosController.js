@@ -43,6 +43,29 @@ export const listarPedidos = (req, res) => {
   }
 };
 
+// Verifica e debita estoque (transação atômica)
+const verificarEstoque = db.transaction((itens) => {
+  for (const item of itens) {
+    const p = db.prepare('SELECT stock, title FROM produtos WHERE id = ?')
+                .get(item.produto_id);
+    if (!p)
+      throw { status: 404, msg: `Produto ID ${item.produto_id} não encontrado.` };
+    if (p.stock < item.quantidade)
+      throw { status: 422,
+              msg: `Estoque insuficiente para "${item.title}". Disponível: ${p.stock}.` };
+  }
+  for (const item of itens) {
+    db.prepare('UPDATE produtos SET stock = stock - ? WHERE id = ?')
+      .run(item.quantidade, item.produto_id);
+  }
+});
+
+try {
+  verificarEstoque(itensDoUsuario);
+} catch (err) {
+  return res.status(err.status || 422).json({ erro: err.msg || 'Erro de estoque.' });
+}
+
 export const iniciarCheckout = (req, res) => {
   try {
     const usuarioId = req.usuario.sub;
@@ -77,9 +100,20 @@ export const iniciarCheckout = (req, res) => {
     const itens = itensDoUsuario.map(({ produto_id, title, quantidade, price }) => ({ produtoId: produto_id, title, quantidade, price }));
 
     const resultado = db.prepare(`
-      INSERT INTO pedidos (usuario_id, data, status, metodo_pagamento, itens, subtotal, desconto, total, cupom, cancelado_em)
-      VALUES (?, ?, 'ativo', NULL, ?, ?, ?, ?, ?, NULL)
-    `).run(usuarioId, data, JSON.stringify(itens), Number(subtotal.toFixed(2)), Number(desconto.toFixed(2)), total, cupomAplicado);
+  INSERT INTO pedidos
+    (usuario_id, data, status, metodo_pagamento,
+    itens, subtotal, desconto, total, cupom, cancelado_em, endereco_entrega)
+  VALUES (?, ?, 'ativo', NULL, ?, ?, ?, ?, ?, NULL, ?)
+`).run(
+  usuarioId,
+  data,
+  JSON.stringify(itens),
+  Number(subtotal.toFixed(2)),
+  Number(desconto.toFixed(2)),
+  total,
+  cupomAplicado,
+  req.body.endereco ? JSON.stringify(req.body.endereco) : null,
+);
 
     db.prepare('DELETE FROM carrinho_itens WHERE usuario_id = ?').run(usuarioId);
 
