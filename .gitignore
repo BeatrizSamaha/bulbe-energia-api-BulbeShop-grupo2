@@ -147,3 +147,7 @@ bulbe.db-wal
 .env
 bulbe.db
 node_modules/
+
+bulbe.db
+bulbe.db-shm
+bulbe.db-wal
