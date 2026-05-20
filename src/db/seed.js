@@ -44,6 +44,15 @@ inserirCategoria.run({ nome: 'Educação',            slug: 'educacao'          
 
 //  Produtos
 const inserirProduto = db.prepare(`
+  INSERT INTO produtos (title, description, price, category, stock, image, rating, variations, loja_id)
+  VALUES (@title, @description, @price, @category, @stock, @image, @rating, @variations, @loja_id)
+`);
+
+inserirProduto.run({ title: 'Lâmpada LED 9W',              description: 'Lâmpada LED de alta eficiência energética, luz branca.',       price: 18.90,  category: 'Economia de energia', stock: 150, image: 'lampada-led-9w.jpg',                 rating: 4.5, variations: JSON.stringify(['Branca', 'Amarela', 'Neutra']),  loja_id: 1 });
+inserirProduto.run({ title: 'Liquidificador Mondial 1000W', description: 'Liquidificador de alta potência, ideal para smoothies.',        price: 183.00, category: 'Eletrônicos',         stock: 30,  image: 'liquidificador-mondial-1000w.jpg',   rating: 4.7, variations: JSON.stringify(['Preto', 'Prata']),               loja_id: null });
+inserirProduto.run({ title: 'Garrafa de água Tupperware',   description: 'Garrafa de água reutilizável, ideal para manter a hidratação.', price: 279.00, category: 'Conforto',            stock: 100, image: 'garrafa-tupperware.jpg',             rating: 4.3, variations: JSON.stringify(['500ml', '750ml', '1L']),         loja_id: null });
+inserirProduto.run({ title: 'Ventilador de mesa Britânia',  description: 'Ventilador de mesa com 3 velocidades e oscilação.',            price: 279.00, category: 'Eletrônicos',         stock: 15,  image: 'ventilador-mesa-britania.jpg',       rating: 4.2, variations: JSON.stringify(['Branco', 'Cinza', 'Prata']),    loja_id: 2 });
+inserirProduto.run({ title: 'Energia: Fique por dentro',    description: 'Livro sobre eficiência energética e energias renováveis.',     price: 45.90,  category: 'Educação',            stock: 60,  image: 'livro-energia-fique-por-dentro.jpg', rating: 4.0, variations: JSON.stringify(['Capa Dura', 'Brochura']),       loja_id: null });
   INSERT INTO produtos (title, description, price, category, stock, image, rating, variations, destaque)
   VALUES (@title, @description, @price, @category, @stock, @image, @rating, @variations, @destaque)
 `);
