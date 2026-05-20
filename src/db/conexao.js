@@ -107,6 +107,10 @@ db.exec(`
 `);
 
 // Migrações
+const colunasProdutos = db.pragma('table_info(produtos)').map((c) => c.name);
+if (!colunasProdutos.includes('destaque')) {
+  db.exec('ALTER TABLE produtos ADD COLUMN destaque INTEGER NOT NULL DEFAULT 0;');
+  console.log('[DB] Migração: coluna "destaque" adicionada à tabela produtos.');
 const colunasUsuarios = db.pragma('table_info(usuarios)').map((c) => c.name);
 if (!colunasUsuarios.includes('telefone')) {
   db.exec('ALTER TABLE usuarios ADD COLUMN telefone TEXT;');
