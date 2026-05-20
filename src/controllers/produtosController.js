@@ -7,7 +7,7 @@ const parseProduto = (p) => ({
 
 export const listarProdutos = (req, res) => {
   try {
-    const { busca, categoria, page, limit } = req.query;
+    const { busca, categoria, destaque, page, limit } = req.query;
 
     let query = 'SELECT * FROM produtos WHERE 1=1';
     const params = [];
@@ -20,6 +20,10 @@ export const listarProdutos = (req, res) => {
     if (categoria) {
       query += ' AND LOWER(category) = LOWER(?)';
       params.push(categoria.trim());
+    }
+
+    if (destaque === 'true') {
+      query += ' AND destaque = 1';
     }
 
     const todos = db.prepare(query).all(...params).map(parseProduto);
