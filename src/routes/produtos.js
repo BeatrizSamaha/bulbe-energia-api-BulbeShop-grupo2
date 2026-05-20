@@ -1,8 +1,35 @@
 import { Router } from 'express';
-import { listarProdutos, buscarProdutoPorId } from '../controllers/produtosController.js';
+import {
+    listarProdutos, buscarProdutoPorId,
+    criarProduto, atualizarProduto,
+    deletarProduto, atualizarEstoque,
+} from '../controllers/produtosController.js';
 import { autenticar } from '../middlewares/autenticar.js';
+import { autorizar }  from '../middlewares/autorizar.js';
+import { validar }    from '../middlewares/validar.js';
+import {
+    schemaCriarProduto, schemaEditarProduto
+} from '../validators/schemas.js';
 
 const router = Router();
+
+// Rotas públicas
+router.get('/',    listarProdutos);
+router.get('/:id', autenticar, buscarProdutoPorId);
+
+// Rotas admin
+router.post('/',
+    autenticar, autorizar('admin'),
+    validar(schemaCriarProduto), criarProduto);
+router.put('/:id',
+    autenticar, autorizar('admin'),
+    validar(schemaEditarProduto), atualizarProduto);
+router.patch('/:id/estoque',
+    autenticar, autorizar('admin'), atualizarEstoque);
+router.delete('/:id',
+    autenticar, autorizar('admin'), deletarProduto);
+
+export default router;
 
 /**
  * @openapi
@@ -120,9 +147,5 @@ const router = Router();
  *         description: Erro interno do servidor.
  */
 
-// Rota pública [IMP-30]
-router.get('/', listarProdutos);
-// Rota protegida
-router.get('/:id', autenticar, buscarProdutoPorId);
 
 export default router;
