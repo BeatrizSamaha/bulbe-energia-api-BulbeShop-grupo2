@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import db from '../db/conexao.js';
 
 export const verPerfil = (req, res) => {
-  const usuario = db.prepare('SELECT id, nome, email, papel, pontos FROM usuarios WHERE id = ?').get(req.usuario.sub);
+  const usuario = db.prepare('SELECT id, nome, email, telefone, papel, pontos FROM usuarios WHERE id = ?').get(req.usuario.sub);
 
   if (!usuario) {
     return res.status(404).json({ mensagem: 'Usuário não encontrado.' });
@@ -13,10 +13,10 @@ export const verPerfil = (req, res) => {
 };
 
 export const editarPerfil = async (req, res) => {
-  const { nome, senha } = req.body;
+  const { nome, senha, email, telefone } = req.body;
 
-  if (!nome && !senha) {
-    return res.status(400).json({ mensagem: 'Informe ao menos um campo para atualizar (nome ou senha).' });
+  if (!nome && !senha && !email && !telefone) {
+    return res.status(400).json({ mensagem: 'Informe ao menos um campo para atualizar (nome, email, telefone ou senha).' });
   }
 
   const usuario = db.prepare('SELECT * FROM usuarios WHERE id = ?').get(req.usuario.sub);
@@ -25,13 +25,22 @@ export const editarPerfil = async (req, res) => {
     return res.status(404).json({ mensagem: 'Usuário não encontrado.' });
   }
 
+  if (email && email !== usuario.email) {
+    const emailEmUso = db.prepare('SELECT id FROM usuarios WHERE email = ? AND id != ?').get(email, req.usuario.sub);
+    if (emailEmUso) {
+      return res.status(409).json({ mensagem: 'Este e-mail já está em uso por outro usuário.' });
+    }
+    db.prepare('UPDATE usuarios SET email = ? WHERE id = ?').run(email, req.usuario.sub);
+  }
+
   if (nome) db.prepare('UPDATE usuarios SET nome = ? WHERE id = ?').run(nome, req.usuario.sub);
+  if (telefone) db.prepare('UPDATE usuarios SET telefone = ? WHERE id = ?').run(telefone, req.usuario.sub);
   if (senha) {
     const senhaHash = await bcrypt.hash(senha, 10);
     db.prepare('UPDATE usuarios SET senha = ? WHERE id = ?').run(senhaHash, req.usuario.sub);
   }
 
-  const perfil = db.prepare('SELECT id, nome, email, papel, pontos FROM usuarios WHERE id = ?').get(req.usuario.sub);
+  const perfil = db.prepare('SELECT id, nome, email, telefone, papel, pontos FROM usuarios WHERE id = ?').get(req.usuario.sub);
   return res.status(200).json({ mensagem: 'Perfil atualizado com sucesso.', perfil });
 };
 
