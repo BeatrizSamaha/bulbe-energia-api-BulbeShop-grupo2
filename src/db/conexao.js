@@ -106,7 +106,13 @@ db.exec(`
   );
 `);
 
-// Migrações 
+// Migrações
+const colunasProdutos = db.pragma('table_info(produtos)').map((c) => c.name);
+if (!colunasProdutos.includes('loja_id')) {
+  db.exec('ALTER TABLE produtos ADD COLUMN loja_id INTEGER REFERENCES lojas(id);');
+  console.log('[DB] Migração: coluna "loja_id" adicionada à tabela produtos.');
+}
+
 const colunasPedidos2 = db.pragma('table_info(pedidos)').map((c) => c.name);
 if (!colunasPedidos2.includes('endereco_entrega')) {
   db.exec('ALTER TABLE pedidos ADD COLUMN endereco_entrega TEXT;');
