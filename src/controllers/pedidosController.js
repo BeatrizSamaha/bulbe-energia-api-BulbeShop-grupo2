@@ -60,12 +60,6 @@ const verificarEstoque = db.transaction((itens) => {
   }
 });
 
-try {
-  verificarEstoque(itensDoUsuario);
-} catch (err) {
-  return res.status(err.status || 422).json({ erro: err.msg || 'Erro de estoque.' });
-}
-
 export const iniciarCheckout = (req, res) => {
   try {
     const usuarioId = req.usuario.sub;
@@ -75,6 +69,12 @@ export const iniciarCheckout = (req, res) => {
 
     if (itensDoUsuario.length === 0) {
       return res.status(422).json({ erro: 'O carrinho está vazio.' });
+    }
+
+    try {
+      verificarEstoque(itensDoUsuario);
+    } catch (err) {
+      return res.status(err.status || 422).json({ erro: err.msg || 'Erro de estoque.' });
     }
 
     const subtotal = itensDoUsuario.reduce((acc, item) => acc + item.price * item.quantidade, 0);
