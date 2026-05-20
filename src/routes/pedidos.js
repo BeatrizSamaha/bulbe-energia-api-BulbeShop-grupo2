@@ -10,6 +10,7 @@ import {
     processarPagamentoPix,
     processarPagamentoBoleto,
     processarPagamentoCartao,
+    processarPagamentoDebito,
 } from "../controllers/pagamentosController.js";
 import { autenticar } from "../middlewares/autenticar.js";
 
@@ -323,5 +324,36 @@ router.patch("/:id/cupom", autenticar, aplicarCupom);
 router.post("/:id/pagamento/pix", autenticar, processarPagamentoPix);
 router.post("/:id/pagamento/boleto", autenticar, processarPagamentoBoleto);
 router.post("/:id/pagamento/cartao", autenticar, processarPagamentoCartao);
+
+/**
+ * @openapi
+ * /api/v1/pedidos/{id}/pagamento/debito:
+ *   post:
+ *     summary: Processar pagamento via Cartão de Débito
+ *     description: Confirma o pagamento de um pedido existente via cartão de débito. Aprovação instantânea, sem parcelamento.
+ *     tags:
+ *       - Pagamentos
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID do pedido a ser pago.
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Pagamento processado com sucesso.
+ *       401:
+ *         description: Token ausente ou inválido.
+ *       403:
+ *         description: Pedido não pertence ao usuário autenticado.
+ *       404:
+ *         description: Pedido não encontrado.
+ *       422:
+ *         description: Pedido já foi pago.
+ */
+router.post("/:id/pagamento/debito", autenticar, processarPagamentoDebito);
 
 export default router;
