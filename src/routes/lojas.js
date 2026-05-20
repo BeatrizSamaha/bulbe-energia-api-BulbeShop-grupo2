@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import {
-    listarLojas, buscarLojaPorId,
+    listarLojas, buscarLojaPorId, listarProdutosPorLoja,
     criarLoja, atualizarLoja, deletarLoja,
 } from '../controllers/lojasController.js';
 import { autenticar } from '../middlewares/autenticar.js';
@@ -10,8 +10,9 @@ import { schemaCriarLoja } from '../validators/schemas.js';
 
 const router = Router();
 
-router.get('/',    listarLojas);
-router.get('/:id', buscarLojaPorId);
+router.get('/',              listarLojas);
+router.get('/:id',          buscarLojaPorId);
+router.get('/:id/produtos', listarProdutosPorLoja);
 
 router.post('/',
     autenticar, autorizar('admin'),
