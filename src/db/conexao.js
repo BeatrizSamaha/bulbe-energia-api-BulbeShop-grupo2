@@ -20,7 +20,7 @@ db.exec(`
     email  TEXT    NOT NULL UNIQUE,
     senha  TEXT    NOT NULL,
     papel  TEXT    NOT NULL DEFAULT 'cliente'
-           CHECK (papel IN ('admin', 'cliente')),
+          CHECK (papel IN ('admin', 'cliente')),
     pontos INTEGER NOT NULL DEFAULT 0
   );
 
@@ -94,9 +94,24 @@ db.exec(`
     produto_id INTEGER NOT NULL REFERENCES produtos(id),
     UNIQUE (usuario_id, produto_id)
   );
+
+  CREATE TABLE IF NOT EXISTS avaliacoes (
+    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+    usuario_id INTEGER NOT NULL REFERENCES usuarios(id),
+    produto_id INTEGER NOT NULL REFERENCES produtos(id),
+    nota       INTEGER NOT NULL CHECK (nota BETWEEN 1 AND 5),
+    comentario TEXT,
+    data       TEXT NOT NULL DEFAULT (datetime('now')),
+    UNIQUE (usuario_id, produto_id)
+  );
 `);
 
-// Migrações (banco já existente) 
+// Migrações 
+const colunasPedidos2 = db.pragma('table_info(pedidos)').map((c) => c.name);
+if (!colunasPedidos2.includes('endereco_entrega')) {
+  db.exec('ALTER TABLE pedidos ADD COLUMN endereco_entrega TEXT;');
+  console.log('[DB] Migração: coluna "endereco_entrega" adicionada.');
+}
 // Adiciona a coluna 'itens' na tabela pedidos caso o banco tenha sido criado
 // com o schema antigo (sem essa coluna). O CREATE TABLE IF NOT EXISTS não
 // atualiza tabelas já existentes, por isso esta verificação é necessária.

@@ -28,3 +28,69 @@ export const buscarLojaPorId = (req, res) => {
     res.status(500).json({ erro: 'Erro interno ao buscar loja parceira' });
   }
 };
+
+export const criarLoja = (req, res) => {
+  try {
+    const { nome, endereco, telefone, horario,
+            produtos, estado, ativa } = req.body;
+    const r = db.prepare(`
+      INSERT INTO lojas
+        (nome, endereco, telefone, horario, produtos, estado, ativa)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+    `).run(nome, endereco ?? null, telefone ?? null,
+          horario ?? null,
+          produtos ? JSON.stringify(produtos) : null,
+          estado ?? null,
+          ativa !== undefined ? (ativa ? 1 : 0) : 1);
+
+    return res.status(201).json(
+      parseLoja(db.prepare('SELECT * FROM lojas WHERE id = ?')
+                  .get(r.lastInsertRowid))
+    );
+  } catch (e) {
+    return res.status(500).json({ erro: 'Erro ao criar loja.' });
+  }
+};
+
+export const atualizarLoja = (req, res) => {
+  try {
+    const id = Number(req.params.id);
+    const l  = db.prepare('SELECT * FROM lojas WHERE id = ?').get(id);
+    if (!l) return res.status(404).json({ erro: 'Loja não encontrada.' });
+
+    const { nome, endereco, telefone, horario,
+            produtos, estado, ativa } = req.body;
+    db.prepare(`
+      UPDATE lojas
+      SET nome=?, endereco=?, telefone=?, horario=?,
+          produtos=?, estado=?, ativa=?
+      WHERE id=?
+    `).run(
+      nome     ?? l.nome,
+      endereco ?? l.endereco,
+      telefone ?? l.telefone,
+      horario  ?? l.horario,
+      produtos ? JSON.stringify(produtos) : l.produtos,
+      estado   ?? l.estado,
+      ativa !== undefined ? (ativa ? 1 : 0) : l.ativa,
+      id,
+    );
+    return res.status(200).json(
+      parseLoja(db.prepare('SELECT * FROM lojas WHERE id = ?').get(id))
+    );
+  } catch (e) {
+    return res.status(500).json({ erro: 'Erro ao atualizar loja.' });
+  }
+};
+
+export const deletarLoja = (req, res) => {
+  try {
+    const id = Number(req.params.id);
+    if (!db.prepare('SELECT id FROM lojas WHERE id = ?').get(id))
+      return res.status(404).json({ erro: 'Loja não encontrada.' });
+    db.prepare('DELETE FROM lojas WHERE id = ?').run(id);
+    return res.status(204).send();
+  } catch (e) {
+    return res.status(500).json({ erro: 'Erro ao deletar loja.' });
+  }
+};
