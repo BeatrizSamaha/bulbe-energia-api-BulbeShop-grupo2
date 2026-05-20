@@ -88,6 +88,26 @@ export const processarPagamentoBoleto = (req, res) => {
   });
 };
 
+export const processarPagamentoDebito = (req, res) => {
+  const usuarioId = req.usuario.sub;
+  const row = validarPedido(req.params.id, usuarioId, res);
+  if (!row) return;
+
+  const { pedidoAtualizado, pontosGanhos } = concluirPagamento(row.id, usuarioId, 'cartao_debito');
+
+  return res.status(200).json({
+    pedido: formatarPedido(pedidoAtualizado),
+    pontosGanhos,
+    pagamento: {
+      metodo:          'cartao_debito',
+      status:          'aprovado',
+      bandeira:        'Visa',
+      ultimos4Digitos: '1234',
+      autorizacao:     `AUTH-${Date.now()}`,
+    },
+  });
+};
+
 export const processarPagamentoCartao = (req, res) => {
   const usuarioId = req.usuario.sub;
   const { cartao } = req.body;
