@@ -28,75 +28,69 @@ Projeto desenvolvido para a disciplina de Projeto de Desenvolvimento Backend —
 
 ## Sobre o Projeto
 
-A Bulbe Energia API é o backend do projeto BulbeShop, um e-commerce, criado para a empresa de energia Bulbe, focado em produtos sustentáveis e de economia de energia. A API fornece os recursos necessários para que o frontend, feito no semestre anterior,  consuma dados de produtos, gerencie carrinhos de compra, processe pedidos e pagamentos, e gerencie perfis de usuário. O projeto é desenvolvido em Node.js seguindo a arquitetura MVC, com autenticação via JWT.
+A Bulbe Energia API é o backend do projeto BulbeShop, um e-commerce criado para a empresa de energia Bulbe, focado em produtos sustentáveis e de economia de energia. A API fornece os recursos necessários para que o frontend consuma dados de produtos, gerencie carrinhos de compra, processe pedidos e pagamentos, e gerencie perfis de usuário.
 
 ---
 
 ## Arquitetura
 
-> A ser preenchido na Sprint 2 após definição da arquitetura MVC.
+A API foi desenvolvida baseada no padrão arquitetural MVC adaptado para APIs. A estrutura é dividida em rotas (`routes/`), controladores (`controllers/`), validação de dados (`validators/`), middlewares de segurança e tratamento (`middlewares/`), e configuração/interação com o banco de dados (`db/`).
 
 ---
 
 ## Tecnologias
 
-> A ser preenchido na Sprint 2.
+- **Linguagem:** JavaScript (Node.js)
+- **Framework:** Express
+- **Banco de Dados:** SQLite (`better-sqlite3`)
+- **Autenticação e Segurança:** JWT (`jsonwebtoken`) e hash de senhas (`bcryptjs`)
+- **Validação de Dados:** Zod
+- **Documentação:** Swagger (`swagger-jsdoc` e `swagger-ui-express`)
+- **Utilitários:** `dotenv`, `nodemon`
 
 ---
 
 ## Como Executar Localmente
 
-> A ser preenchido na Sprint 2.
+Siga os passos abaixo para rodar o projeto em sua máquina:
+
+1. Clone o repositório.
+2. Instale as dependências:
+   ```bash
+   npm install
+   ```
+3. Crie e popule o banco de dados inicial (seeding):
+   ```bash
+   npm run seed
+   ```
+4. Inicie o servidor:
+   ```bash
+   npm run dev
+   ```
+
+A API estará rodando por padrão em `http://localhost:3000`.
 
 ---
 
-## Endpoints da API
+## Documentação Interativa (Swagger)
 
-> Consulte o arquivo completo em [docs/requisitos.md](./docs/requisitos.md).
-
-| Verbo | Path | Descrição |
-|-------|------|-----------|
-| POST | /api/v1/auth/login | Autenticar usuário |
-| GET | /api/v1/produtos | Listar produtos |
-| GET | /api/v1/produtos/:id | Buscar produto por ID |
-| GET | /api/v1/produtos?categoria=:categoria | Listar por categoria |
-| GET | /api/v1/carrinho | Listar itens do carrinho |
-| POST | /api/v1/carrinho/itens | Adicionar item ao carrinho |
-| PATCH | /api/v1/carrinho/itens/:id | Atualizar quantidade |
-| DELETE | /api/v1/carrinho/itens/:id | Remover item do carrinho |
-| GET | /api/v1/favoritos | Listar favoritos |
-| POST | /api/v1/favoritos/:produtoId | Favoritar produto |
-| DELETE | /api/v1/favoritos/:produtoId | Desfavoritar produto |
-| POST | /api/v1/pedidos | Iniciar checkout |
-| POST | /api/v1/pedidos/:id/pagamento/pix | Pagar via PIX |
-| POST | /api/v1/pedidos/:id/pagamento/boleto | Pagar via boleto |
-| POST | /api/v1/pedidos/:id/pagamento/cartao | Pagar via cartão |
-| GET | /api/v1/usuarios/perfil | Ver perfil |
-| PUT | /api/v1/usuarios/perfil | Editar perfil |
-| GET | /api/v1/usuarios/pontos | Consultar pontos Bulbe |
-| GET | /api/v1/cupons | Listar cupons |
-| GET | /api/v1/lojas-parceiras | Listar lojas parceiras |
+A documentação interativa completa dos endpoints (OpenAPI/Swagger) pode ser acessada através do navegador após iniciar o servidor em:
+**`http://localhost:3000/api-docs`**
 
 ---
 
-## Documentacao OpenAPI
+## Estrutura do Repositório
 
-> Arquivo em [docs/openapi.yaml](./docs/openapi.yaml) — a ser preenchido progressivamente.
-
----
-
-## Estrutura do Repositorio
-```
+```text
 bulbe-energia-api-BulbeShop-grupo2/
-├── docs/
-│   ├── requisitos.md
-│   └── openapi.yaml
-├── src/
-│   ├── controllers/
-│   ├── models/
-│   ├── routes/
-│   └── services/
-├── tests/
+├── docs/                # Documentação de requisitos e user stories
+├── src/                 # Código fonte da aplicação
+│   ├── config/          # Configurações globais (ex: auth)
+│   ├── controllers/     # Lógica de controle de requisições
+│   ├── db/              # Conexão com banco SQLite e seeds
+│   ├── middlewares/     # Middlewares (autenticação, validação)
+│   ├── routes/          # Definição das rotas da API
+│   └── validators/      # Schemas de validação com Zod
 ├── .gitignore
 ├── package.json
 └── README.md
@@ -108,23 +102,23 @@ bulbe-energia-api-BulbeShop-grupo2/
 
 | Sprint | Foco | Status |
 |--------|------|--------|
-| Kickoff | Apresentacao dos trabalhos do semestre anterior | Concluida |
-| Sprint 1 | Setup e Elicitacao de Requisitos | Em andamento |
-| Sprint 2 | Modelagem e Arquitetura e CRUD basico | Aguardando |
-| Sprint 3 | Banco de Dados e ORM e Testes | Aguardando |
-| Sprint 4 | Autenticacao e Documentacao Final | Aguardando |
+| Kickoff | Apresentação dos trabalhos do semestre anterior | Concluída |
+| Sprint 1 | Setup e Elicitação de Requisitos | Concluída |
+| Sprint 2 | Modelagem e Arquitetura e CRUD básico | Concluída |
+| Sprint 3 | Banco de Dados e ORM e Testes | Em andamento |
+| Sprint 4 | Autenticação e Documentação Final | Aguardando |
 
 ---
 
-## Referencias
+## Referências
 
 - SOMMERVILLE, I. Software Engineering. 10. ed. Pearson, 2015.
 - FOWLER, M. Patterns of Enterprise Application Architecture. Addison-Wesley, 2002.
 - RICHARDSON, L.; RUBY, S. RESTful Web Services. O'Reilly, 2007.
-- OpenAPI Initiative. OpenAPI Specification v3.1.0. Disponivel em: https://spec.openapis.org/oas/v3.1.0
+- OpenAPI Initiative. OpenAPI Specification v3.1.0. Disponível em: https://spec.openapis.org/oas/v3.1.0
 
 ---
 
-## Licenca
+## Licença
 
-Distribuido sob a licenca MIT. Consulte o arquivo [LICENSE](./LICENSE) para mais detalhes.
+Distribuído sob a licença MIT. Consulte o arquivo [LICENSE](./LICENSE) para mais detalhes.
