@@ -55,8 +55,14 @@ const verificarEstoque = db.transaction((itens) => {
               msg: `Estoque insuficiente para "${item.title}". Disponível: ${p.stock}.` };
   }
   for (const item of itens) {
-    db.prepare('UPDATE produtos SET stock = stock - ? WHERE id = ?')
+    const resultado = db.prepare('UPDATE produtos SET stock = stock - ? WHERE id = ?')
       .run(item.quantidade, item.produto_id);
+      if(resultado.changes==0){
+        throw{
+          status:422,
+          msg:'Estoque insuficiente para produto ID ${item.produto_id}'
+        };
+      }
   }
 });
 
