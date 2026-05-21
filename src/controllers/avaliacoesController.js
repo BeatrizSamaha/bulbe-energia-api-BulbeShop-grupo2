@@ -10,25 +10,6 @@ try {
     return res.status(404).json({ erro: 'Produto não encontrado.' });
 
     // Só quem comprou pode avaliar
-    const pedidos = db.prepare(`
-    SELECT itens
-    FROM pedidos
-    WHERE usuario_id = ?
-    AND status = 'concluido'
-    `).all(usuarioId);
-
-    const comprou = pedidos.some((pedido) => {
-        try {
-            const itens = JSON.parse(pedido.itens);
-
-            return itens.some(
-                (item) => item.produtoId === produtoId
-            );
-        } catch {
-        return false;
-        }
-    });
-    
     const comprou = db.prepare(`
     SELECT 1 FROM pedidos
     WHERE usuario_id = ? AND status = 'concluido'

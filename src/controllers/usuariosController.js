@@ -3,7 +3,9 @@ import bcrypt from 'bcryptjs';
 import db from '../db/conexao.js';
 
 export const verPerfil = (req, res) => {
-  const usuario = db.prepare('SELECT id, nome, email, telefone, papel, pontos FROM usuarios WHERE id = ?').get(req.usuario.sub);
+  const usuario = db.prepare(
+    'SELECT id, nome, email, telefone, papel, pontos FROM usuarios WHERE id = ?'
+  ).get(req.usuario.sub);
 
   if (!usuario) {
     return res.status(404).json({ mensagem: 'Usuário não encontrado.' });
@@ -13,11 +15,12 @@ export const verPerfil = (req, res) => {
 };
 
 export const editarPerfil = async (req, res) => {
-  const { nome, senha } = req.body;
   const { nome, senha, email, telefone } = req.body;
 
-  if (!nome && !senha && !email && !telefone) {
-    return res.status(400).json({ mensagem: 'Informe ao menos um campo para atualizar (nome, email, telefone ou senha).' });
+  if (!nome && !email && !telefone && !senha) {
+    return res.status(400).json({
+      mensagem: 'Informe ao menos um campo para atualizar (nome, email, telefone ou senha).'
+    });
   }
 
   const usuario = db.prepare('SELECT * FROM usuarios WHERE id = ?').get(req.usuario.sub);

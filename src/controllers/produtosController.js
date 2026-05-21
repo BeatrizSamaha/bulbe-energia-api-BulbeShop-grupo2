@@ -4,16 +4,11 @@ const parseProduto = (p) => {
   let variations=[];
 
   try{
-    variations=p.variations
-    ?JSON.parse(p.variations)
-    :[];
+    variations=p.variations ? JSON.parse(p.variations) : [];
   } catch{
     variations=[];
   }
-  return{
-    ...p,
-    variations,
-  };
+  return{ ...p, variations };
 };
 
 export const listarProdutos = (req, res) => {
@@ -36,8 +31,10 @@ export const listarProdutos = (req, res) => {
   const paginaAtual = Math.max(1, parseInt(page) || 1);
   const itensPorPagina = Math.min(100, Math.max(1, parseInt(limit) || 20));
   const offset = (paginaAtual - 1) * itensPorPagina;
+
   const countQuery = query.replace('SELECT ', 'SELECT COUNT() as total');
   const { total } = db.prepare(countQuery).get(...params);
+
   query += ' LIMIT ? OFFSET ?';
   const produtos = db.prepare(query)
     .all(...params, itensPorPagina, offset)
@@ -48,11 +45,7 @@ export const listarProdutos = (req, res) => {
     }
 
     const todos = db.prepare(query).all(...params).map(parseProduto);
-
-    const paginaAtual = Math.max(1, parseInt(page) || 1);
-    const itensPorPagina = Math.min(100, Math.max(1, parseInt(limit) || 20));
-    const total = todos.length;
-    const totalPages = Math.ceil(total / itensPorPagina);
+    
     const inicio = (paginaAtual - 1) * itensPorPagina;
     const fim = inicio + itensPorPagina;
 
@@ -99,15 +92,6 @@ export const criarProduto = (req, res) => {
       erro: 'URL da imagem inválida.'
     });
     }
-    
-    const r = db.prepare(`
-      INSERT INTO produtos
-        (title, description, price, category, stock, image, rating, variations)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    `).run(title, description ?? null, price, category ?? null,
-          stock ?? 0, image ?? null, rating ?? null,
-          variations ? JSON.stringify(variations) : null);
-            stock, image, rating, variations, destaque, loja_id } = req.body;
 
     const r = db.prepare(`
       INSERT INTO produtos
@@ -134,7 +118,6 @@ export const atualizarProduto = (req, res) => {
     if (!p) return res.status(404).json({ erro: 'Produto não encontrado.' });
 
     const { title, description, price, category,
-            stock, image, rating, variations } = req.body;
             stock, image, rating, variations, destaque, loja_id } = req.body;
 
     db.prepare(`
