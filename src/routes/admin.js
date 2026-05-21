@@ -21,6 +21,7 @@ router.delete('/usuarios/:id',      deletarUsuario);
 
 export default router;
 
+//fazer swegger
 /**
  * @openapi
  * /api/v1/admin/dashboard:
