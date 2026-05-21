@@ -1,9 +1,20 @@
 import db from '../db/conexao.js';
 
-const parseProduto = (p) => ({
-  ...p,
-  variations: p.variations ? JSON.parse(p.variations) : [],
-});
+const parseProduto = (p) => {
+  let variations=[];
+
+  try{
+    variations=p.variations
+    ?JSON.parse(p.variations)
+    :[];
+  } catch{
+    variations=[];
+  }
+  return{
+    ...p,
+    variations,
+  };
+};
 
 export const listarProdutos = (req, res) => {
   try {
@@ -22,6 +33,16 @@ export const listarProdutos = (req, res) => {
       params.push(categoria.trim());
     }
 
+  const paginaAtual = Math.max(1, parseInt(page) || 1);
+  const itensPorPagina = Math.min(100, Math.max(1, parseInt(limit) || 20));
+  const offset = (paginaAtual - 1) * itensPorPagina;
+  const countQuery = query.replace('SELECT ', 'SELECT COUNT() as total');
+  const { total } = db.prepare(countQuery).get(...params);
+  query += ' LIMIT ? OFFSET ?';
+  const produtos = db.prepare(query)
+    .all(...params, itensPorPagina, offset)
+    .map(parseProduto);
+  const totalPages = Math.ceil(total / itensPorPagina);
     if (destaque === 'true') {
       query += ' AND destaque = 1';
     }
@@ -36,7 +57,7 @@ export const listarProdutos = (req, res) => {
     const fim = inicio + itensPorPagina;
 
     return res.status(200).json({
-      data: todos.slice(inicio, fim),
+      data: produtos,
       total,
       page: paginaAtual,
       limit: itensPorPagina,
@@ -69,6 +90,23 @@ export const buscarProdutoPorId = (req, res) => {
 export const criarProduto = (req, res) => {
   try {
     const { title, description, price, category,
+            stock, image, rating, variations } = req.body;
+    if (
+      image &&
+      !/^https?:\/\/.+/i.test(image)
+    ) {
+    return res.status(400).json({
+      erro: 'URL da imagem inválida.'
+    });
+    }
+    
+    const r = db.prepare(`
+      INSERT INTO produtos
+        (title, description, price, category, stock, image, rating, variations)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `).run(title, description ?? null, price, category ?? null,
+          stock ?? 0, image ?? null, rating ?? null,
+          variations ? JSON.stringify(variations) : null);
             stock, image, rating, variations, destaque, loja_id } = req.body;
 
     const r = db.prepare(`
@@ -96,11 +134,13 @@ export const atualizarProduto = (req, res) => {
     if (!p) return res.status(404).json({ erro: 'Produto não encontrado.' });
 
     const { title, description, price, category,
+            stock, image, rating, variations } = req.body;
             stock, image, rating, variations, destaque, loja_id } = req.body;
 
     db.prepare(`
       UPDATE produtos
       SET title=?, description=?, price=?, category=?,
+          stock=?, image=?, rating=?, variations=?
           stock=?, image=?, rating=?, variations=?, destaque=?, loja_id=?
       WHERE id=?
     `).run(

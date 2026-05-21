@@ -14,6 +14,7 @@ router.post('/', autenticar, validar(schemaAvaliacao), avaliarProduto);
 
 export default router;
 
+//fazer swegger
 /**
  * @openapi
  * /api/v1/produtos/{produtoId}/avaliacoes:

@@ -16,6 +16,7 @@ const router = Router();
 
 // Rotas públicas
 router.get('/',    listarProdutos);
+router.get('/:id', autenticar, buscarProdutoPorId);
 router.get('/:id', buscarProdutoPorId);
 
 // Avaliações aninhadas em /:produtoId/avaliacoes
@@ -32,6 +33,8 @@ router.patch('/:id/estoque',
     autenticar, autorizar('admin'), atualizarEstoque);
 router.delete('/:id',
     autenticar, autorizar('admin'), deletarProduto);
+
+export default router;
 
 /**
  * @openapi
@@ -336,5 +339,6 @@ router.delete('/:id',
  *       '500':
  *         description: Erro interno do servidor.
  */
+
 
 export default router;

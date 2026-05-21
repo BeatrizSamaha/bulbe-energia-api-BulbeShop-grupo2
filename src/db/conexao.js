@@ -106,6 +106,7 @@ db.exec(`
   );
 `);
 
+// Migrações 
 // Migrações
 const colunasProdutos = db.pragma('table_info(produtos)').map((c) => c.name);
 if (!colunasProdutos.includes('loja_id')) {

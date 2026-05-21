@@ -14,6 +14,7 @@ import pedidosRouter    from './routes/pedidos.js';
 import favoritosRouter  from './routes/favoritos.js';
 import usuariosRouter   from './routes/usuarios.js';
 import adminRouter      from './routes/admin.js';
+import avaliacoesRouter from './routes/avaliacoes.js';
 
 const app = express();
 app.use(express.json());
@@ -57,6 +58,7 @@ app.use('/api-docs',
 // Rotas
 app.use('/api/v1/auth',            authRouter);
 app.use('/api/v1/produtos',        produtosRouter);
+app.use('/api/v1/produtos',        avaliacoesRouter); // /:produtoId/avaliacoes
 app.use('/api/v1/categorias',      categoriasRouter);
 app.use('/api/v1/cupons',          cuponsRouter);
 app.use('/api/v1/lojas-parceiras', lojasRouter);
@@ -76,6 +78,11 @@ app.use((req, res) => {
 // Handler global de erros
 app.use((err, req, res, _next) => {
   console.error('[Erro]', err);
+  res.status(500).json({ 
+    erro: process.env.NODE_ENV === 'production'
+    ? 'Erro interno do servidor.' 
+    : err.message || err,
+  });
   res.status(500).json({ erro: 'Erro interno do servidor.' });
 });
 
