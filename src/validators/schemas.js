@@ -22,6 +22,8 @@ export const schemaCriarProduto = z.object({
     image:       z.string().optional(),
     rating:      z.number().min(0).max(5).optional(),
     variations:  z.array(z.string()).optional(),
+    destaque:    z.boolean().optional(),
+    loja_id:     z.number().int().positive().nullable().optional(),
 });
 
 export const schemaEditarProduto = schemaCriarProduto.partial();
@@ -67,8 +69,10 @@ export const schemaAvaliacao = z.object({
 
 // Perfil
 export const schemaEditarPerfil = z.object({
-    nome:  z.string().min(2).optional(),
-    senha: z.string().min(6).optional(),
-}).refine((d) => d.nome || d.senha, {
-    message: 'Informe ao menos nome ou senha.',
+    nome:     z.string().min(2).optional(),
+    senha:    z.string().min(6).optional(),
+    email:    z.string().email('E-mail inválido.').optional(),
+    telefone: z.string().min(8).optional(),
+}).refine((d) => d.nome || d.senha || d.email || d.telefone, {
+    message: 'Informe ao menos um campo para atualizar.',
 });

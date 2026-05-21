@@ -94,6 +94,54 @@ try {
 }
 };
 
+export const listarTodosPedidos = (req, res) => {
+try {
+    const { page = 1, limit = 20, status, usuario_id } = req.query;
+
+    let query  = 'SELECT * FROM pedidos WHERE 1=1';
+    const params = [];
+
+    if (status) {
+    query += ' AND status = ?';
+    params.push(status);
+    }
+
+    if (usuario_id) {
+    query += ' AND usuario_id = ?';
+    params.push(Number(usuario_id));
+    }
+
+    query += ' ORDER BY data DESC';
+
+    const todos  = db.prepare(query).all(...params).map((row) => ({
+    id:              row.id,
+    usuarioId:       row.usuario_id,
+    data:            row.data,
+    status:          row.status,
+    metodoPagamento: row.metodo_pagamento,
+    itens:           typeof row.itens === 'string' ? JSON.parse(row.itens) : (row.itens || []),
+    subtotal:        row.subtotal,
+    desconto:        row.desconto,
+    total:           row.total,
+    cupom:           row.cupom,
+    canceladoEm:     row.cancelado_em,
+    }));
+
+    const total      = todos.length;
+    const pg         = Math.max(1, parseInt(page));
+    const lim        = Math.min(100, Math.max(1, parseInt(limit)));
+    const inicio     = (pg - 1) * lim;
+
+    return res.status(200).json({
+    data: todos.slice(inicio, inicio + lim),
+    total, page: pg, limit: lim,
+    totalPages: Math.ceil(total / lim),
+    });
+} catch (e) {
+    return res.status(500).json({ erro: 'Erro ao listar pedidos.' });
+}
+};
+
 export const deletarUsuario = (req, res) => {
 try {
     const id = Number(req.params.id);
