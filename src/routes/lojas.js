@@ -70,57 +70,6 @@ export default router;
  *                 $ref: '#/components/schemas/Loja'
  *       '500':
  *         description: Erro interno do servidor.
- *
- * /api/v1/lojas-parceiras/{id}:
- *   get:
- *     summary: Busca uma loja parceira pelo ID
- *     tags: [Lojas Parceiras]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *         example: 1
- *     responses:
- *       '200':
- *         description: Sucesso. Retorna a loja parceira encontrada.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Loja'
- *       '404':
- *         description: Loja parceira não encontrada.
- *       '500':
- *         description: Erro interno do servidor.
- *
- * /api/v1/lojas-parceiras/{id}/produtos:
- *   get:
- *     summary: Lista os produtos vinculados a uma loja parceira
- *     tags: [Lojas Parceiras]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *         description: ID da loja parceira
- *         example: 1
- *     responses:
- *       '200':
- *         description: Lista de produtos da loja retornada com sucesso.
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Produto'
- *       '404':
- *         description: Loja parceira não encontrada ou inativa.
- *       '500':
- *         description: Erro interno do servidor.
- *
- * /api/v1/lojas-parceiras:
  *   post:
  *     summary: Cria uma nova loja parceira (admin)
  *     tags: [Lojas Parceiras]
@@ -176,6 +125,27 @@ export default router;
  *         description: Erro interno do servidor.
  *
  * /api/v1/lojas-parceiras/{id}:
+ *   get:
+ *     summary: Busca uma loja parceira pelo ID
+ *     tags: [Lojas Parceiras]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         example: 1
+ *     responses:
+ *       '200':
+ *         description: Sucesso. Retorna a loja parceira encontrada.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Loja'
+ *       '404':
+ *         description: Loja parceira não encontrada.
+ *       '500':
+ *         description: Erro interno do servidor.
  *   put:
  *     summary: Atualiza uma loja parceira (admin)
  *     tags: [Lojas Parceiras]
@@ -247,6 +217,32 @@ export default router;
  *         description: Acesso negado. Requer papel admin.
  *       '404':
  *         description: Loja não encontrada.
+ *       '500':
+ *         description: Erro interno do servidor.
+ *
+ * /api/v1/lojas-parceiras/{id}/produtos:
+ *   get:
+ *     summary: Lista os produtos vinculados a uma loja parceira
+ *     tags: [Lojas Parceiras]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID da loja parceira
+ *         example: 1
+ *     responses:
+ *       '200':
+ *         description: Lista de produtos da loja retornada com sucesso.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Produto'
+ *       '404':
+ *         description: Loja parceira não encontrada ou inativa.
  *       '500':
  *         description: Erro interno do servidor.
  */
