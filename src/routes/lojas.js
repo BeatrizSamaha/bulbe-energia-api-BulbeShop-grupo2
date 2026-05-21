@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import {
-    listarLojas, buscarLojaPorId,
     listarLojas, buscarLojaPorId, listarProdutosPorLoja,
     criarLoja, atualizarLoja, deletarLoja,
 } from '../controllers/lojasController.js';
