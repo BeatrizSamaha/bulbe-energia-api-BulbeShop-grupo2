@@ -51,8 +51,6 @@ export default router;
  *   get:
  *     summary: Lista todos os cupons ativos
  *     tags: [Cupons]
- *     security:
- *       - bearerAuth: []
  *     responses:
  *       '200':
  *         description: Sucesso. Retorna a lista de cupons disponíveis.
@@ -62,41 +60,8 @@ export default router;
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Cupom'
- *       '401':
- *         description: Não autorizado. Token ausente ou inválido.
  *       '500':
  *         description: Erro interno do servidor.
- *
- * /api/v1/cupons/{codigo}:
- *   get:
- *     summary: Busca um cupom pelo código
- *     tags: [Cupons]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: codigo
- *         required: true
- *         schema:
- *           type: string
- *         example: 'BEMVINDO10'
- *     responses:
- *       '200':
- *         description: Sucesso. Retorna o cupom encontrado.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Cupom'
- *       '404':
- *         description: Cupom não encontrado.
- *       '410':
- *         description: Cupom expirado.
- *       '401':
- *         description: Não autorizado. Token ausente ou inválido.
- *       '500':
- *         description: Erro interno do servidor.
- *
- * /api/v1/cupons:
  *   post:
  *     summary: Cria um novo cupom de desconto (admin)
  *     tags: [Cupons]
@@ -143,6 +108,31 @@ export default router;
  *         description: Acesso negado. Requer papel admin.
  *       '409':
  *         description: Cupom já cadastrado.
+ *       '500':
+ *         description: Erro interno do servidor.
+ *
+ * /api/v1/cupons/{codigo}:
+ *   get:
+ *     summary: Busca um cupom pelo código
+ *     tags: [Cupons]
+ *     parameters:
+ *       - in: path
+ *         name: codigo
+ *         required: true
+ *         schema:
+ *           type: string
+ *         example: 'BEMVINDO10'
+ *     responses:
+ *       '200':
+ *         description: Sucesso. Retorna o cupom encontrado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Cupom'
+ *       '404':
+ *         description: Cupom não encontrado.
+ *       '410':
+ *         description: Cupom expirado.
  *       '500':
  *         description: Erro interno do servidor.
  *
