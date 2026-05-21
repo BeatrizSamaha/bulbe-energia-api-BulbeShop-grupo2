@@ -14,4 +14,113 @@ router.post('/', autenticar, validar(schemaAvaliacao), avaliarProduto);
 
 export default router;
 
-//fazer swegger
+/**
+ * @openapi
+ * /api/v1/produtos/{produtoId}/avaliacoes:
+ *   get:
+ *     summary: Lista as avaliações de um produto
+ *     tags: [Avaliações]
+ *     parameters:
+ *       - in: path
+ *         name: produtoId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID do produto
+ *         example: 1
+ *     responses:
+ *       '200':
+ *         description: Avaliações retornadas com sucesso.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 produto:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                       example: 1
+ *                     title:
+ *                       type: string
+ *                       example: Lâmpada LED 9W
+ *                     media:
+ *                       type: number
+ *                       example: 4.5
+ *                 total:
+ *                   type: integer
+ *                   example: 2
+ *                 avaliacoes:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                         example: 1
+ *                       nota:
+ *                         type: integer
+ *                         minimum: 1
+ *                         maximum: 5
+ *                         example: 5
+ *                       comentario:
+ *                         type: string
+ *                         example: Produto excelente!
+ *                       data:
+ *                         type: string
+ *                         format: date-time
+ *                       autor:
+ *                         type: string
+ *                         example: Beatriz Samaha
+ *       '404':
+ *         description: Produto não encontrado.
+ *       '500':
+ *         description: Erro interno do servidor.
+ *   post:
+ *     summary: Avalia um produto (somente quem comprou)
+ *     description: Cria ou atualiza a avaliação do usuário autenticado para o produto. Só é permitido avaliar produtos com pedido concluído.
+ *     tags: [Avaliações]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: produtoId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID do produto a avaliar
+ *         example: 1
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [nota]
+ *             properties:
+ *               nota:
+ *                 type: integer
+ *                 minimum: 1
+ *                 maximum: 5
+ *                 example: 5
+ *               comentario:
+ *                 type: string
+ *                 minLength: 3
+ *                 example: Produto excelente, recomendo!
+ *     responses:
+ *       '201':
+ *         description: Avaliação criada com sucesso.
+ *       '200':
+ *         description: Avaliação atualizada com sucesso.
+ *       '400':
+ *         description: Dados inválidos (nota fora do range ou ausente).
+ *       '401':
+ *         description: Token ausente ou inválido.
+ *       '403':
+ *         description: Usuário não comprou este produto.
+ *       '404':
+ *         description: Produto não encontrado.
+ *       '500':
+ *         description: Erro interno do servidor.
+ */
