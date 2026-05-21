@@ -13,7 +13,6 @@ export const verPerfil = (req, res) => {
 };
 
 export const editarPerfil = async (req, res) => {
-  const { nome, senha } = req.body;
   const { nome, senha, email, telefone } = req.body;
 
   if (!nome && !senha && !email && !telefone) {
