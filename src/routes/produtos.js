@@ -126,31 +126,6 @@ router.delete('/:id',
  *                   example: 1
  *       '500':
  *         description: Erro interno do servidor.
- *
- * /api/v1/produtos/{id}:
- *   get:
- *     summary: Busca um produto pelo ID
- *     tags: [Produtos]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *         example: 1
- *     responses:
- *       '200':
- *         description: Sucesso. Retorna o produto encontrado.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Produto'
- *       '404':
- *         description: Produto não encontrado.
- *       '500':
- *         description: Erro interno do servidor.
  *   post:
  *     summary: Cria um novo produto (admin)
  *     tags: [Produtos]
@@ -214,6 +189,27 @@ router.delete('/:id',
  *         description: Erro interno do servidor.
  *
  * /api/v1/produtos/{id}:
+ *   get:
+ *     summary: Busca um produto pelo ID
+ *     tags: [Produtos]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         example: 1
+ *     responses:
+ *       '200':
+ *         description: Sucesso. Retorna o produto encontrado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Produto'
+ *       '404':
+ *         description: Produto não encontrado.
+ *       '500':
+ *         description: Erro interno do servidor.
  *   put:
  *     summary: Atualiza um produto existente (admin)
  *     tags: [Produtos]
