@@ -83,6 +83,7 @@ app.use((err, req, res, _next) => {
     ? 'Erro interno do servidor.' 
     : err.message || err,
   });
+  res.status(500).json({ erro: 'Erro interno do servidor.' });
 });
 
 const PORT = process.env.PORT || 3000;

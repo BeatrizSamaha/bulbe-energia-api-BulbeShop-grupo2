@@ -18,7 +18,7 @@ const parseProduto = (p) => {
 
 export const listarProdutos = (req, res) => {
   try {
-    const { busca, categoria, page, limit } = req.query;
+    const { busca, categoria, destaque, page, limit } = req.query;
 
     let query = 'SELECT * FROM produtos WHERE 1=1';
     const params = [];
@@ -43,6 +43,18 @@ export const listarProdutos = (req, res) => {
     .all(...params, itensPorPagina, offset)
     .map(parseProduto);
   const totalPages = Math.ceil(total / itensPorPagina);
+    if (destaque === 'true') {
+      query += ' AND destaque = 1';
+    }
+
+    const todos = db.prepare(query).all(...params).map(parseProduto);
+
+    const paginaAtual = Math.max(1, parseInt(page) || 1);
+    const itensPorPagina = Math.min(100, Math.max(1, parseInt(limit) || 20));
+    const total = todos.length;
+    const totalPages = Math.ceil(total / itensPorPagina);
+    const inicio = (paginaAtual - 1) * itensPorPagina;
+    const fim = inicio + itensPorPagina;
 
     return res.status(200).json({
       data: produtos,
@@ -95,6 +107,17 @@ export const criarProduto = (req, res) => {
     `).run(title, description ?? null, price, category ?? null,
           stock ?? 0, image ?? null, rating ?? null,
           variations ? JSON.stringify(variations) : null);
+            stock, image, rating, variations, destaque, loja_id } = req.body;
+
+    const r = db.prepare(`
+      INSERT INTO produtos
+        (title, description, price, category, stock, image, rating, variations, destaque, loja_id)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `).run(title, description ?? null, price, category ?? null,
+          stock ?? 0, image ?? null, rating ?? null,
+          variations ? JSON.stringify(variations) : null,
+          destaque ? 1 : 0,
+          loja_id ?? null);
 
     const novo = db.prepare('SELECT * FROM produtos WHERE id = ?')
                   .get(r.lastInsertRowid);
@@ -112,11 +135,13 @@ export const atualizarProduto = (req, res) => {
 
     const { title, description, price, category,
             stock, image, rating, variations } = req.body;
+            stock, image, rating, variations, destaque, loja_id } = req.body;
 
     db.prepare(`
       UPDATE produtos
       SET title=?, description=?, price=?, category=?,
           stock=?, image=?, rating=?, variations=?
+          stock=?, image=?, rating=?, variations=?, destaque=?, loja_id=?
       WHERE id=?
     `).run(
       title       ?? p.title,
@@ -127,6 +152,8 @@ export const atualizarProduto = (req, res) => {
       image       ?? p.image,
       rating      ?? p.rating,
       variations  ? JSON.stringify(variations) : p.variations,
+      destaque !== undefined ? (destaque ? 1 : 0) : p.destaque,
+      loja_id !== undefined  ? (loja_id ?? null) : p.loja_id,
       id,
     );
 
