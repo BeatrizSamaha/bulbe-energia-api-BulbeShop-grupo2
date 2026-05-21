@@ -33,14 +33,16 @@ export const listarProdutos = (req, res) => {
       params.push(categoria.trim());
     }
 
-    const todos = db.prepare(query).all(...params).map(parseProduto);
-
-    const paginaAtual = Math.max(1, parseInt(page) || 1);
-    const itensPorPagina = Math.min(100, Math.max(1, parseInt(limit) || 20));
-    const total = todos.length;
-    const totalPages = Math.ceil(total / itensPorPagina);
-    const inicio = (paginaAtual - 1) * itensPorPagina;
-    const fim = inicio + itensPorPagina;
+  const paginaAtual = Math.max(1, parseInt(page) || 1);
+  const itensPorPagina = Math.min(100, Math.max(1, parseInt(limit) || 20));
+  const offset = (paginaAtual - 1) * itensPorPagina;
+  const countQuery = query.replace('SELECT ', 'SELECT COUNT() as total');
+  const { total } = db.prepare(countQuery).get(...params);
+  query += ' LIMIT ? OFFSET ?';
+  const produtos = db.prepare(query)
+    .all(...params, itensPorPagina, offset)
+    .map(parseProduto);
+  const totalPages = Math.ceil(total / itensPorPagina);
 
     return res.status(200).json({
       data: todos.slice(inicio, fim),
