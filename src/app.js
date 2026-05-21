@@ -78,7 +78,11 @@ app.use((req, res) => {
 // Handler global de erros
 app.use((err, req, res, _next) => {
   console.error('[Erro]', err);
-  res.status(500).json({ erro: 'Erro interno do servidor.' });
+  res.status(500).json({ 
+    erro: process.env.NODE_ENV === 'production'
+    ? 'Erro interno do servidor.' 
+    : err.message || err,
+  });
 });
 
 const PORT = process.env.PORT || 3000;
