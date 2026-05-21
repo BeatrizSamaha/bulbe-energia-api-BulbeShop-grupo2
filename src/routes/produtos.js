@@ -16,7 +16,6 @@ const router = Router();
 
 // Rotas públicas
 router.get('/',    listarProdutos);
-router.get('/:id', autenticar, buscarProdutoPorId);
 router.get('/:id', buscarProdutoPorId);
 
 // Avaliações aninhadas em /:produtoId/avaliacoes
