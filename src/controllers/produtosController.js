@@ -45,7 +45,7 @@ export const listarProdutos = (req, res) => {
   const totalPages = Math.ceil(total / itensPorPagina);
 
     return res.status(200).json({
-      data: todos.slice(inicio, fim),
+      data: produtos,
       total,
       page: paginaAtual,
       limit: itensPorPagina,
@@ -79,7 +79,15 @@ export const criarProduto = (req, res) => {
   try {
     const { title, description, price, category,
             stock, image, rating, variations } = req.body;
-
+    if (
+      image &&
+      !/^https?:\/\/.+/i.test(image)
+    ) {
+    return res.status(400).json({
+      erro: 'URL da imagem inválida.'
+    });
+    }
+    
     const r = db.prepare(`
       INSERT INTO produtos
         (title, description, price, category, stock, image, rating, variations)
