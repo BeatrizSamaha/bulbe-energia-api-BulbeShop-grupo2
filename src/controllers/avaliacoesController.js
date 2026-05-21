@@ -9,18 +9,10 @@ try {
     if (!db.prepare('SELECT id FROM produtos WHERE id = ?').get(produtoId))
     return res.status(404).json({ erro: 'Produto não encontrado.' });
 
-    // Só quem comprou pode avaliar
-    const pedidos = db.prepare(`
-    SELECT itens
-    FROM pedidos
-    WHERE usuario_id = ?
-    AND status = 'concluido'
-    `).all(usuarioId);
-
     const comprou = db.prepare(`
-    SELECT 1 FROM pedidos
-    WHERE usuario_id = ? AND status = 'concluido'
-        AND itens LIKE ?
+        SELECT 1 FROM pedidos
+        WHERE usuario_id = ? AND status = 'concluido'
+            AND itens LIKE ?
     `).get(usuarioId, `%"produtoId":${produtoId}%`);
 
     if (!comprou)
