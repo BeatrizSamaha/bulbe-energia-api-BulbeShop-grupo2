@@ -1,9 +1,20 @@
 import db from '../db/conexao.js';
 
-const parseProduto = (p) => ({
-  ...p,
-  variations: p.variations ? JSON.parse(p.variations) : [],
-});
+const parseProduto = (p) => {
+  let variations=[];
+
+  try{
+    variations=p.variations
+    ?JSON.parse(p.variations)
+    :[];
+  } catch{
+    variations=[];
+  }
+  return{
+    ...p,
+    variations,
+  };
+};
 
 export const listarProdutos = (req, res) => {
   try {
