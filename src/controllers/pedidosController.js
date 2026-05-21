@@ -66,17 +66,6 @@ const verificarEstoque = db.transaction((itens) => {
   }
 });
 
-try {
-  verificarEstoque(itensDoUsuario);
-} catch (err) {
-  return res.status(err.status || 422).json({ erro: err.msg || 'Erro de estoque.' });
-}
-
-    db.prepare('UPDATE produtos SET stock = stock - ? WHERE id = ?')
-      .run(item.quantidade, item.produto_id);
-  }
-});
-
 export const iniciarCheckout = (req, res) => {
   try {
     const usuarioId = req.usuario.sub;
