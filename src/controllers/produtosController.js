@@ -69,15 +69,17 @@ export const buscarProdutoPorId = (req, res) => {
 export const criarProduto = (req, res) => {
   try {
     const { title, description, price, category,
-            stock, image, rating, variations } = req.body;
+            stock, image, rating, variations, destaque, loja_id } = req.body;
 
     const r = db.prepare(`
       INSERT INTO produtos
-        (title, description, price, category, stock, image, rating, variations)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        (title, description, price, category, stock, image, rating, variations, destaque, loja_id)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).run(title, description ?? null, price, category ?? null,
           stock ?? 0, image ?? null, rating ?? null,
-          variations ? JSON.stringify(variations) : null);
+          variations ? JSON.stringify(variations) : null,
+          destaque ? 1 : 0,
+          loja_id ?? null);
 
     const novo = db.prepare('SELECT * FROM produtos WHERE id = ?')
                   .get(r.lastInsertRowid);
@@ -94,12 +96,12 @@ export const atualizarProduto = (req, res) => {
     if (!p) return res.status(404).json({ erro: 'Produto não encontrado.' });
 
     const { title, description, price, category,
-            stock, image, rating, variations } = req.body;
+            stock, image, rating, variations, destaque, loja_id } = req.body;
 
     db.prepare(`
       UPDATE produtos
       SET title=?, description=?, price=?, category=?,
-          stock=?, image=?, rating=?, variations=?
+          stock=?, image=?, rating=?, variations=?, destaque=?, loja_id=?
       WHERE id=?
     `).run(
       title       ?? p.title,
@@ -110,6 +112,8 @@ export const atualizarProduto = (req, res) => {
       image       ?? p.image,
       rating      ?? p.rating,
       variations  ? JSON.stringify(variations) : p.variations,
+      destaque !== undefined ? (destaque ? 1 : 0) : p.destaque,
+      loja_id !== undefined  ? (loja_id ?? null) : p.loja_id,
       id,
     );
 
