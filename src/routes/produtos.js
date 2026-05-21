@@ -10,12 +10,16 @@ import { validar }    from '../middlewares/validar.js';
 import {
     schemaCriarProduto, schemaEditarProduto
 } from '../validators/schemas.js';
+import avaliacoesRouter from './avaliacoes.js';
 
 const router = Router();
 
 // Rotas públicas
 router.get('/',    listarProdutos);
-router.get('/:id', autenticar, buscarProdutoPorId);
+router.get('/:id', buscarProdutoPorId);
+
+// Avaliações aninhadas em /:produtoId/avaliacoes
+router.use('/:produtoId/avaliacoes', avaliacoesRouter);
 
 // Rotas admin
 router.post('/',
@@ -28,8 +32,6 @@ router.patch('/:id/estoque',
     autenticar, autorizar('admin'), atualizarEstoque);
 router.delete('/:id',
     autenticar, autorizar('admin'), deletarProduto);
-
-export default router;
 
 /**
  * @openapi
