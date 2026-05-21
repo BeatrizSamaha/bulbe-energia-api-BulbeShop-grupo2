@@ -6,8 +6,8 @@ db.exec(`
   DELETE FROM carrinho_itens;
   DELETE FROM pedidos;
   DELETE FROM cupons;
-  DELETE FROM lojas;
   DELETE FROM produtos;
+  DELETE FROM lojas;
   DELETE FROM categorias;
   DELETE FROM usuarios;
   DELETE FROM sqlite_sequence WHERE name IN (
