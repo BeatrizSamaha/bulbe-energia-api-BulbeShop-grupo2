@@ -339,6 +339,3 @@ export default router;
  *       '500':
  *         description: Erro interno do servidor.
  */
-
-
-export default router;
