@@ -29,6 +29,12 @@ try {
         }
     });
     
+    const comprou = db.prepare(`
+    SELECT 1 FROM pedidos
+    WHERE usuario_id = ? AND status = 'concluido'
+        AND itens LIKE ?
+    `).get(usuarioId, `%"produtoId":${produtoId}%`);
+
     if (!comprou)
     return res.status(403).json({
         erro: 'Você só pode avaliar produtos que já comprou.',
