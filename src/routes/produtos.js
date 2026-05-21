@@ -94,6 +94,12 @@ router.delete('/:id',
  *           type: string
  *         description: Filtrar produtos por categoria
  *         example: 'Economia de energia'
+ *       - in: query
+ *         name: destaque
+ *         schema:
+ *           type: boolean
+ *         description: Filtrar apenas produtos em destaque
+ *         example: true
  *     responses:
  *       '200':
  *         description: Sucesso. Retorna a lista paginada de produtos.
@@ -143,8 +149,194 @@ router.delete('/:id',
  *               $ref: '#/components/schemas/Produto'
  *       '404':
  *         description: Produto não encontrado.
+ *       '500':
+ *         description: Erro interno do servidor.
+ *   post:
+ *     summary: Cria um novo produto (admin)
+ *     tags: [Produtos]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [title, price]
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 example: Painel Solar 400W
+ *               description:
+ *                 type: string
+ *                 example: Painel fotovoltaico de alta eficiência.
+ *               price:
+ *                 type: number
+ *                 example: 1299.90
+ *               category:
+ *                 type: string
+ *                 example: Economia de energia
+ *               stock:
+ *                 type: integer
+ *                 example: 20
+ *               image:
+ *                 type: string
+ *                 example: painel-solar-400w.jpg
+ *               rating:
+ *                 type: number
+ *                 example: 4.8
+ *               variations:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 example: ['Monocristalino', 'Policristalino']
+ *               destaque:
+ *                 type: boolean
+ *                 example: true
+ *               loja_id:
+ *                 type: integer
+ *                 nullable: true
+ *                 example: 1
+ *     responses:
+ *       '201':
+ *         description: Produto criado com sucesso.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Produto'
+ *       '400':
+ *         description: Dados inválidos.
  *       '401':
- *         description: Não autorizado. Token ausente ou inválido.
+ *         description: Token ausente ou inválido.
+ *       '403':
+ *         description: Acesso negado. Requer papel admin.
+ *       '500':
+ *         description: Erro interno do servidor.
+ *
+ * /api/v1/produtos/{id}:
+ *   put:
+ *     summary: Atualiza um produto existente (admin)
+ *     tags: [Produtos]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         example: 1
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               price:
+ *                 type: number
+ *               category:
+ *                 type: string
+ *               stock:
+ *                 type: integer
+ *               image:
+ *                 type: string
+ *               rating:
+ *                 type: number
+ *               variations:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *               destaque:
+ *                 type: boolean
+ *               loja_id:
+ *                 type: integer
+ *                 nullable: true
+ *     responses:
+ *       '200':
+ *         description: Produto atualizado com sucesso.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Produto'
+ *       '400':
+ *         description: Dados inválidos.
+ *       '401':
+ *         description: Token ausente ou inválido.
+ *       '403':
+ *         description: Acesso negado. Requer papel admin.
+ *       '404':
+ *         description: Produto não encontrado.
+ *       '500':
+ *         description: Erro interno do servidor.
+ *   delete:
+ *     summary: Remove um produto (admin)
+ *     tags: [Produtos]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         example: 1
+ *     responses:
+ *       '204':
+ *         description: Produto removido com sucesso.
+ *       '401':
+ *         description: Token ausente ou inválido.
+ *       '403':
+ *         description: Acesso negado. Requer papel admin.
+ *       '404':
+ *         description: Produto não encontrado.
+ *       '500':
+ *         description: Erro interno do servidor.
+ *
+ * /api/v1/produtos/{id}/estoque:
+ *   patch:
+ *     summary: Atualiza o estoque de um produto (admin)
+ *     tags: [Produtos]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         example: 1
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [quantidade]
+ *             properties:
+ *               quantidade:
+ *                 type: integer
+ *                 minimum: 0
+ *                 example: 50
+ *     responses:
+ *       '200':
+ *         description: Estoque atualizado com sucesso.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Produto'
+ *       '400':
+ *         description: Quantidade inválida.
+ *       '401':
+ *         description: Token ausente ou inválido.
+ *       '403':
+ *         description: Acesso negado. Requer papel admin.
+ *       '404':
+ *         description: Produto não encontrado.
  *       '500':
  *         description: Erro interno do servidor.
  */
