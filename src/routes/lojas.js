@@ -12,8 +12,6 @@ const router = Router();
 
 router.get('/',    listarLojas);
 router.get('/:id', buscarLojaPorId);
-router.get('/',              listarLojas);
-router.get('/:id',          buscarLojaPorId);
 router.get('/:id/produtos', listarProdutosPorLoja);
 
 router.post('/',

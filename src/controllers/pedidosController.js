@@ -57,10 +57,10 @@ const verificarEstoque = db.transaction((itens) => {
   for (const item of itens) {
     const resultado = db.prepare('UPDATE produtos SET stock = stock - ? WHERE id = ?')
       .run(item.quantidade, item.produto_id);
-      if(resultado.changes==0){
-        throw{
-          status:422,
-          msg:'Estoque insuficiente para produto ID ${item.produto_id}'
+      if (resultado.changes == 0) {
+        throw {
+          status: 422,
+          msg: `Estoque insuficiente para produto ID ${item.produto_id}`,
         };
       }
   }

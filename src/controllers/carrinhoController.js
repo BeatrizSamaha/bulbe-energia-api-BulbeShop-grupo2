@@ -21,16 +21,15 @@ export const listarItens = (req, res) => {
 export const adicionarItem = (req, res) => {
   try {
     const usuarioId = req.usuario.sub;
+
     const { produtoId, quantidade = 1 } = req.body;
-    if (
-      !Number.isInteger(produtoId) ||
-      !Number.isInteger(quantidade) ||
-      quantidade <= 0
-    ) {
-    return res.status(400).json({
-      erro: 'Produto e quantidade inválidos.'
-    });
-}
+    if (!Number.isInteger(produtoId) || quantidade <= 0) {
+      return res.status(400).json({ erro: 'ID inválido.' });
+    }
+    if (!Number.isInteger(quantidade) || quantidade <= 0) {
+      return res.status(400).json({ erro: 'Quantidade inválida.' });
+    }
+
     if (!produtoId) {
       return res.status(400).json({ erro: 'O campo "produtoId" é obrigatório.' });
     }
