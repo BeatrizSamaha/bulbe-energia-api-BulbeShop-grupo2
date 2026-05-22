@@ -12,7 +12,7 @@ const db = new Database(DB_PATH);
 db.pragma('journal_mode = WAL');
 db.pragma('foreign_keys = ON');
 
-// criaçao das tabelas 
+// Criação das tabelas
 db.exec(`
   CREATE TABLE IF NOT EXISTS usuarios (
     id     INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -107,7 +107,6 @@ db.exec(`
 `);
 
 // Migrações 
-// Migrações
 const colunasProdutos = db.pragma('table_info(produtos)').map((c) => c.name);
 if (!colunasProdutos.includes('loja_id')) {
   db.exec('ALTER TABLE produtos ADD COLUMN loja_id INTEGER REFERENCES lojas(id);');
