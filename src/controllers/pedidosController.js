@@ -95,6 +95,11 @@ export const iniciarCheckout = (req, res) => {
         return res.status(422).json({ erro: 'Cupom inválido ou expirado.' });
       }
 
+      const hoje = new Date().toISOString().slice(0, 10);
+      if (cupomEncontrado.validade && cupomEncontrado.validade < hoje) {
+        return res.status(422).json({ erro: 'Cupom inválido ou expirado.' });
+      }
+
       desconto = cupomEncontrado.tipo === '%'
         ? subtotal * (cupomEncontrado.desconto / 100)
         : cupomEncontrado.desconto;
@@ -183,6 +188,11 @@ export const aplicarCupom = (req, res) => {
 
     if (!cupom) {
       return res.status(404).json({ mensagem: 'Cupom não encontrado ou inativo.' });
+    }
+
+    const hoje = new Date().toISOString().slice(0, 10);
+    if (cupom.validade && cupom.validade < hoje) {
+      return res.status(410).json({ mensagem: 'Este cupom está expirado.' });
     }
 
     const cupomJaUsado = db.prepare('SELECT 1 FROM pedidos WHERE usuario_id = ? AND cupom = ?').get(usuarioId, cupom.codigo);

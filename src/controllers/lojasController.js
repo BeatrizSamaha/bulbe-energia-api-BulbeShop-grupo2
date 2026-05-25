@@ -22,7 +22,7 @@ export const listarLojas = (req, res) => {
 
 export const buscarLojaPorId = (req, res) => {
   try {
-    const loja = db.prepare('SELECT * FROM lojas WHERE id = ?').get(Number(req.params.id));
+    const loja = db.prepare('SELECT * FROM lojas WHERE id = ? AND ativa = 1').get(Number(req.params.id));
 
     if (!loja) {
       return res.status(404).json({ erro: 'Loja parceira não encontrada.' });
