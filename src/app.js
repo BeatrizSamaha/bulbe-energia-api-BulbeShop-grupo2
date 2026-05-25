@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import express    from 'express';
+import cors       from 'cors';
 import rateLimit  from 'express-rate-limit';
 import swaggerJsDoc from 'swagger-jsdoc';
 import swaggerUi    from 'swagger-ui-express';
@@ -17,6 +18,11 @@ import adminRouter      from './routes/admin.js';
 import avaliacoesRouter from './routes/avaliacoes.js';
 
 const app = express();
+app.use(cors({
+  origin: process.env.CORS_ORIGIN || '*',
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
 app.use(express.json());
 
 // Rate limiting
