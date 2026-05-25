@@ -44,6 +44,15 @@ export const adicionarItem = (req, res) => {
       'SELECT * FROM carrinho_itens WHERE usuario_id = ? AND produto_id = ?'
     ).get(usuarioId, Number(produtoId));
 
+    const quantidadeAtual = itemExistente ? itemExistente.quantidade : 0;
+    const quantidadeTotal = quantidadeAtual + Number(quantidade);
+
+    if (quantidadeTotal > produto.stock) {
+      return res.status(422).json({
+        erro: `Estoque insuficiente. Disponível: ${produto.stock}.`,
+      });
+    }
+
     if (itemExistente) {
       db.prepare(
         'UPDATE carrinho_itens SET quantidade = quantidade + ? WHERE usuario_id = ? AND produto_id = ?'
@@ -83,6 +92,13 @@ export const atualizarQuantidade = (req, res) => {
 
     if (!item) {
       return res.status(404).json({ erro: 'Item não encontrado no carrinho.' });
+    }
+
+    const produto = db.prepare('SELECT stock FROM produtos WHERE id = ?').get(Number(id));
+    if (produto && qtd > produto.stock) {
+      return res.status(422).json({
+        erro: `Estoque insuficiente. Disponível: ${produto.stock}.`,
+      });
     }
 
     db.prepare(
