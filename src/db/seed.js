@@ -18,7 +18,7 @@ db.exec(`
 
 
 //  Usuários (senhas com hash bcrypt) 
-const senhaHash = bcrypt.hashSync('senha123', 10);
+const senhaHash = bcrypt.hashSync(process.env.SEED_PASSWORD || 'senha123', 10);
 
 const inserirUsuario = db.prepare(`
   INSERT INTO usuarios (nome, email, senha, papel, pontos)
