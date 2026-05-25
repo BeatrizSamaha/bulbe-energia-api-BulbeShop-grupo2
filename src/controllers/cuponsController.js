@@ -2,7 +2,9 @@ import db from '../db/conexao.js';
 
 export const listarDisponiveis = (req, res) => {
   try {
-    const cupons = db.prepare('SELECT * FROM cupons WHERE ativo = 1').all();
+    const cupons = db.prepare(
+      "SELECT * FROM cupons WHERE ativo = 1 AND (validade IS NULL OR validade >= date('now'))"
+    ).all();
     res.status(200).json(cupons);
   } catch (error) {
     res.status(500).json({ erro: 'Erro interno ao buscar cupons' });
@@ -20,6 +22,11 @@ export const buscarCupomPorCodigo = (req, res) => {
     }
 
     if (!cupom.ativo) {
+      return res.status(410).json({ erro: 'Este cupom está expirado.' });
+    }
+
+    const hoje = new Date().toISOString().slice(0, 10);
+    if (cupom.validade && cupom.validade < hoje) {
       return res.status(410).json({ erro: 'Este cupom está expirado.' });
     }
 
