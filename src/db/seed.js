@@ -48,9 +48,8 @@ const inserirLoja = db.prepare(`
   VALUES (@nome, @endereco, @telefone, @horario, @produtos, @estado, @ativa)
 `);
 
-inserirLoja.run({ nome: 'SolarTech Equipamentos', endereco: 'Av. Paulista, 1000 - São Paulo/SP',        telefone: '(11) 91234-5678', horario: 'Seg a Sex: 08h às 18h | Sáb: 08h às 13h', produtos: JSON.stringify(['Painéis solares', 'Inversores', 'Cabos fotovoltaicos']),              estado: 'SP', ativa: 1 });
-inserirLoja.run({ nome: 'Eólica Sul Peças',        endereco: 'Rua das Araucárias, 42 - Porto Alegre/RS', telefone: '(51) 98765-4321', horario: 'Seg a Sex: 09h às 17h',                    produtos: JSON.stringify(['Turbinas eólicas', 'Geradores', 'Baterias']),                       estado: 'RS', ativa: 1 });
-inserirLoja.run({ nome: 'Norte Baterias',          endereco: 'Rua do Comércio, 88 - Manaus/AM',          telefone: '(92) 93456-7890', horario: 'Seg a Sex: 08h às 17h | Sáb: 08h às 12h', produtos: JSON.stringify(['Baterias estacionárias', 'Nobreaks', 'Controladores de carga']), estado: 'AM', ativa: 0 });
+inserirLoja.run({ nome: 'Drogaria Araujo', endereco: 'Rua Itajubá, 123 - Belo Horizonte/MG', telefone: '(31) 3270-5000', horario: 'Seg a Dom: 07h às 23h', produtos: JSON.stringify(['Medicamentos', 'Higiene', 'Eletrodomésticos']), estado: 'MG', ativa: 1 });
+inserirLoja.run({ nome: 'Norte Baterias', endereco: 'Rua do Comércio, 88 - Manaus/AM', telefone: '(92) 93456-7890', horario: 'Seg a Sex: 08h às 17h | Sáb: 08h às 12h', produtos: JSON.stringify(['Baterias estacionárias', 'Nobreaks', 'Controladores de carga']), estado: 'AM', ativa: 0 });
 
 //  Produtos
 const inserirProduto = db.prepare(`

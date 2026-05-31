@@ -16,6 +16,7 @@ import favoritosRouter  from './routes/favoritos.js';
 import usuariosRouter   from './routes/usuarios.js';
 import adminRouter      from './routes/admin.js';
 import avaliacoesRouter from './routes/avaliacoes.js';
+import freteRouter      from './routes/frete.js'; 
 
 const app = express();
 app.use(cors({
@@ -73,6 +74,7 @@ app.use('/api/v1/pedidos',         pedidosRouter);
 app.use('/api/v1/favoritos',       favoritosRouter);
 app.use('/api/v1/usuarios',        usuariosRouter);
 app.use('/api/v1/admin',           adminRouter);
+app.use('/api/v1/frete',           freteRouter); 
 
 // 404
 app.use((req, res) => {
