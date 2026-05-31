@@ -138,4 +138,13 @@ if (!colunasPedidos.includes('itens')) {
   console.log('[DB] Migração aplicada: coluna "itens" adicionada à tabela pedidos.');
 }
 
+if (!colunasProdutos.includes('price_was')) {
+  db.exec('ALTER TABLE produtos ADD COLUMN price_was REAL;');
+  console.log('[DB] Migração: coluna "price_was" adicionada à tabela produtos.');
+}
+if (!colunasProdutos.includes('promo')) {
+  db.exec('ALTER TABLE produtos ADD COLUMN promo TEXT;');
+  console.log('[DB] Migração: coluna "promo" adicionada à tabela produtos.');
+}
+
 export default db;

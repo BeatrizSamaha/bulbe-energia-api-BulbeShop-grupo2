@@ -7,7 +7,7 @@ const parseProduto = (p) => {
   } catch {
     variations = [];
   }
-  return { ...p, variations };
+  return { ...p, variations, price_was: p.price_was ?? null, promo: p.promo ?? null };
 };
 
 export const listarProdutos = (req, res) => {
