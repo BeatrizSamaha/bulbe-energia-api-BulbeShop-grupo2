@@ -6,6 +6,36 @@ const router = Router();
 
 /**
  * @swagger
+ * components:
+ *   schemas:
+ *     UsuarioPerfil:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *           example: 4
+ *         nome:
+ *           type: string
+ *           example: "Pedro Paulucci"
+ *         email:
+ *           type: string
+ *           example: "pedro.paulucci@bulbeshop.com.br"
+ *         papel:
+ *           type: string
+ *           example: "cliente"
+ *         pontos:
+ *           type: integer
+ *           example: 210
+ *     UsuarioEditar:
+ *       type: object
+ *       properties:
+ *         nome:
+ *           type: string
+ *           example: "Pedro Paulucci"
+ *         senha:
+ *           type: string
+ *           example: "novaSenha123"
+ *
  * /api/v1/usuarios/perfil:
  *   get:
  *     summary: Visualizar perfil do usuário logado
@@ -19,23 +49,7 @@ const router = Router();
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 id:
- *                   type: integer
- *                   example: 4
- *                 nome:
- *                   type: string
- *                   example: "Pedro Paulucci"
- *                 email:
- *                   type: string
- *                   example: "pedro.paulucci@bulbeshop.com.br"
- *                 papel:
- *                   type: string
- *                   example: "cliente"
- *                 pontos:
- *                   type: integer
- *                   example: 210
+ *               $ref: '#/components/schemas/UsuarioPerfil'
  *       401:
  *         description: Token ausente ou inválido.
  *       404:
@@ -57,14 +71,7 @@ router.get('/perfil', autenticar, verPerfil);
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               nome:
- *                 type: string
- *                 example: "Pedro Paulucci"
- *               senha:
- *                 type: string
- *                 example: "novaSenha123"
+ *             $ref: '#/components/schemas/UsuarioEditar'
  *     responses:
  *       200:
  *         description: Perfil atualizado com sucesso.

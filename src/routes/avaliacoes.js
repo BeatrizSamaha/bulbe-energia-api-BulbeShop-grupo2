@@ -17,6 +17,42 @@ export default router;
 // Documentação swagger
 /**
  * @openapi
+ * components:
+ *   schemas:
+ *     Avaliacao:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *           example: 1
+ *         nota:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 5
+ *           example: 5
+ *         comentario:
+ *           type: string
+ *           example: Produto excelente!
+ *         data:
+ *           type: string
+ *           format: date-time
+ *         autor:
+ *           type: string
+ *           example: Beatriz Samaha
+ *     AvaliacaoCriar:
+ *       type: object
+ *       required: [nota]
+ *       properties:
+ *         nota:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 5
+ *           example: 5
+ *         comentario:
+ *           type: string
+ *           minLength: 3
+ *           example: Produto excelente, recomendo!
+ *
  * /api/v1/produtos/{produtoId}/avaliacoes:
  *   get:
  *     summary: Lista as avaliações de um produto
@@ -55,25 +91,7 @@ export default router;
  *                 avaliacoes:
  *                   type: array
  *                   items:
- *                     type: object
- *                     properties:
- *                       id:
- *                         type: integer
- *                         example: 1
- *                       nota:
- *                         type: integer
- *                         minimum: 1
- *                         maximum: 5
- *                         example: 5
- *                       comentario:
- *                         type: string
- *                         example: Produto excelente!
- *                       data:
- *                         type: string
- *                         format: date-time
- *                       autor:
- *                         type: string
- *                         example: Beatriz Samaha
+ *                     $ref: '#/components/schemas/Avaliacao'
  *       '404':
  *         description: Produto não encontrado.
  *       '500':
@@ -97,18 +115,7 @@ export default router;
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required: [nota]
- *             properties:
- *               nota:
- *                 type: integer
- *                 minimum: 1
- *                 maximum: 5
- *                 example: 5
- *               comentario:
- *                 type: string
- *                 minLength: 3
- *                 example: Produto excelente, recomendo!
+ *             $ref: '#/components/schemas/AvaliacaoCriar'
  *     responses:
  *       '201':
  *         description: Avaliação criada com sucesso.
