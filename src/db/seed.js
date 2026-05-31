@@ -48,9 +48,8 @@ const inserirLoja = db.prepare(`
   VALUES (@nome, @endereco, @telefone, @horario, @produtos, @estado, @ativa)
 `);
 
-inserirLoja.run({ nome: 'SolarTech Equipamentos', endereco: 'Av. Paulista, 1000 - São Paulo/SP',        telefone: '(11) 91234-5678', horario: 'Seg a Sex: 08h às 18h | Sáb: 08h às 13h', produtos: JSON.stringify(['Painéis solares', 'Inversores', 'Cabos fotovoltaicos']),              estado: 'SP', ativa: 1 });
-inserirLoja.run({ nome: 'Eólica Sul Peças',        endereco: 'Rua das Araucárias, 42 - Porto Alegre/RS', telefone: '(51) 98765-4321', horario: 'Seg a Sex: 09h às 17h',                    produtos: JSON.stringify(['Turbinas eólicas', 'Geradores', 'Baterias']),                       estado: 'RS', ativa: 1 });
-inserirLoja.run({ nome: 'Norte Baterias',          endereco: 'Rua do Comércio, 88 - Manaus/AM',          telefone: '(92) 93456-7890', horario: 'Seg a Sex: 08h às 17h | Sáb: 08h às 12h', produtos: JSON.stringify(['Baterias estacionárias', 'Nobreaks', 'Controladores de carga']), estado: 'AM', ativa: 0 });
+inserirLoja.run({ nome: 'Drogaria Araujo', endereco: 'Rua Itajubá, 123 - Belo Horizonte/MG', telefone: '(31) 3270-5000', horario: 'Seg a Dom: 07h às 23h', produtos: JSON.stringify(['Medicamentos', 'Higiene', 'Eletrodomésticos']), estado: 'MG', ativa: 1 });
+inserirLoja.run({ nome: 'Norte Baterias', endereco: 'Rua do Comércio, 88 - Manaus/AM', telefone: '(92) 93456-7890', horario: 'Seg a Sex: 08h às 17h | Sáb: 08h às 12h', produtos: JSON.stringify(['Baterias estacionárias', 'Nobreaks', 'Controladores de carga']), estado: 'AM', ativa: 0 });
 
 //  Produtos
 const inserirProduto = db.prepare(`
@@ -58,11 +57,15 @@ const inserirProduto = db.prepare(`
   VALUES (@title, @description, @price, @category, @stock, @image, @rating, @variations, @loja_id, @destaque)
 `);
 
-inserirProduto.run({ title: 'Lâmpada LED 9W',              description: 'Lâmpada LED de alta eficiência energética, luz branca.',       price: 18.90,  category: 'Economia de energia', stock: 150, image: 'lampada-led-9w.jpg',                 rating: 4.5, variations: JSON.stringify(['Branca', 'Amarela', 'Neutra']),  loja_id: 1,    destaque: 1 });
-inserirProduto.run({ title: 'Liquidificador Mondial 1000W', description: 'Liquidificador de alta potência, ideal para smoothies.',        price: 183.00, category: 'Eletrônicos',         stock: 30,  image: 'liquidificador-mundial-1000w.jpg',   rating: 4.7, variations: JSON.stringify(['Preto', 'Prata']),               loja_id: null, destaque: 1 });
-inserirProduto.run({ title: 'Garrafa de água Tupperware',   description: 'Garrafa de água reutilizável, ideal para manter a hidratação.', price: 279.00, category: 'Conforto',            stock: 100, image: 'garrafa-tupperware.jpg',             rating: 4.3, variations: JSON.stringify(['500ml', '750ml', '1L']),         loja_id: null, destaque: 0 });
-inserirProduto.run({ title: 'Ventilador de mesa Britânia',  description: 'Ventilador de mesa com 3 velocidades e oscilação.',            price: 279.00, category: 'Eletrônicos',         stock: 15,  image: 'ventilador-mesa-britania.jpg',       rating: 4.2, variations: JSON.stringify(['Branco', 'Cinza', 'Prata']),    loja_id: 2,    destaque: 0 });
-inserirProduto.run({ title: 'Energia: Fique por dentro',    description: 'Livro sobre eficiência energética e energias renováveis.',     price: 45.90,  category: 'Educação',            stock: 60,  image: 'livro-energia-fique-por-dentro.jpg', rating: 4.0, variations: JSON.stringify(['Capa Dura', 'Brochura']),       loja_id: null, destaque: 1 });
+inserirProduto.run({ title: 'Lâmpada LED 9W',              description: 'Lâmpada LED de alta eficiência energética, luz branca.',       price: 18.90,  category: 'Economia de energia', stock: 150, image: 'lampada-led-9w.jpg',                 rating: 4.5, variations: JSON.stringify(['Branca', 'Amarela', 'Neutra']),  loja_id: null,    destaque: 1 });
+inserirProduto.run({ title: 'Liquidificador Mondial 1000W', description: 'Liquidificador de alta potência, ideal para smoothies.',        price: 183.00, category: 'Eletrônicos',         stock: 30,  image: '/altafidelidade/home/img/blender.jpg',   rating: 4.7, variations: JSON.stringify(['Preto', 'Prata']),               loja_id: null, destaque: 1 });
+inserirProduto.run({ title: 'Garrafa de água Tupperware',   description: 'Garrafa de água reutilizável, ideal para manter a hidratação.', price: 53.00, category: 'Conforto',            stock: 100, image: '/altafidelidade/home/img/tupperware.jpg',             rating: 4.3, variations: JSON.stringify(['500ml', '750ml', '1L']),         loja_id: 1, destaque: 0 });
+inserirProduto.run({ title: 'Ventilador de mesa Britânia',  description: 'Ventilador de mesa com 3 velocidades e oscilação.',            price: 279.00, category: 'Eletrônicos',         stock: 15,  image: '/altafidelidade/home/img/ventiladorbritania.webp',       rating: 4.2, variations: JSON.stringify(['Branco', 'Cinza', 'Prata']),    loja_id: 1,    destaque: 0 });
+inserirProduto.run({ title: 'Energia: Fique por dentro',    description: 'Livro sobre eficiência energética e energias renováveis.',     price: 49.00,  category: 'Educação',            stock: 60,  image: '/altafidelidade/home/img/livro.jpg', rating: 4.0, variations: JSON.stringify(['Capa Dura', 'Brochura']),       loja_id: null, destaque: 1 });
+inserirProduto.run({ title: 'Soro fisiológico 0,9% de 500ml', description: 'Soro fisiológico ideal para limpeza.', price: 4.90, category: 'Conforto', stock: 100, image: '/altafidelidade/loja araujo/img/soro.png', rating: 5.0, variations: JSON.stringify(['500ml']), loja_id: null, destaque: 1 });
+inserirProduto.run({ title: 'Bepantriz pomada para assadura', description: 'Pomada para proteção da pele.', price: 39.90, category: 'Conforto', stock: 50, image: '/altafidelidade/loja araujo/img/pomada.png', rating: 4.5, variations: JSON.stringify(['Único']), loja_id: null, destaque: 1 });
+inserirProduto.run({ title: 'Pomada Bepantol Baby', description: 'Pomada de assadura para bebês.', price: 79.93, category: 'Conforto', stock: 40, image: '/altafidelidade/loja araujo/img/bepantol.png', rating: 4.8, variations: JSON.stringify(['Único']), loja_id: null, destaque: 1 });
+inserirProduto.run({ title: 'Desodorante Rexona Clinical', description: 'Desodorante com proteção intensiva.', price: 14.76, category: 'Conforto', stock: 80, image: '/altafidelidade/loja araujo/img/desodorante.png', rating: 4.6, variations: JSON.stringify(['Roll-on', 'Aerosol']), loja_id: null, destaque: 0 });
 
 // Cupons 
 const inserirCupom = db.prepare(`
