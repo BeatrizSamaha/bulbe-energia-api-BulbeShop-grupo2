@@ -6,6 +6,34 @@ const router = Router();
 
 /**
  * @openapi
+ * components:
+ *   schemas:
+ *     UsuarioRegistro:
+ *       type: object
+ *       required: [nome, email, senha]
+ *       properties:
+ *         nome:
+ *           type: string
+ *           example: João Silva
+ *         email:
+ *           type: string
+ *           example: joao@email.com
+ *         senha:
+ *           type: string
+ *           example: '123456'
+ *     UsuarioLogin:
+ *       type: object
+ *       required: [email, senha]
+ *       properties:
+ *         email:
+ *           type: string
+ *           format: email
+ *           example: beatriz.samaha@bulbeshop.com.br
+ *         senha:
+ *           type: string
+ *           format: password
+ *           example: senha123
+ *
  * /api/v1/auth/register:
  *   post:
  *     summary: Cadastra um novo usuário e retorna um token JWT
@@ -15,18 +43,7 @@ const router = Router();
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required: [nome, email, senha]
- *             properties:
- *               nome:
- *                 type: string
- *                 example: João Silva
- *               email:
- *                 type: string
- *                 example: joao@email.com
- *               senha:
- *                 type: string
- *                 example: '123456'
+ *             $ref: '#/components/schemas/UsuarioRegistro'
  *     responses:
  *       201:
  *         description: Usuário criado com sucesso. Retorna token JWT.
@@ -44,17 +61,7 @@ const router = Router();
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required: [email, senha]
- *             properties:
- *               email:
- *                 type: string
- *                 format: email
- *                 example: beatriz.samaha@bulbeshop.com.br
- *               senha:
- *                 type: string
- *                 format: password
- *                 example: senha123
+ *             $ref: '#/components/schemas/UsuarioLogin'
  *     responses:
  *       '200':
  *         description: Login bem-sucedido. Retorna o token JWT.

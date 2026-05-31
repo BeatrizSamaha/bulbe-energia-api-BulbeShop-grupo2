@@ -18,6 +18,30 @@ const router = Router();
 
 /**
  * @openapi
+ * components:
+ *   schemas:
+ *     PedidoCupom:
+ *       type: object
+ *       properties:
+ *         codigo:
+ *           type: string
+ *           example: BEMVINDO10
+ *     PedidoCartao:
+ *       type: object
+ *       required: [cartao]
+ *       properties:
+ *         cartao:
+ *           type: object
+ *           required: [tipo]
+ *           properties:
+ *             tipo:
+ *               type: string
+ *               enum: [debito, credito]
+ *               example: credito
+ *             parcelas:
+ *               type: integer
+ *               example: 3
+ *
  * /api/v1/pedidos/{id}:
  *   get:
  *     summary: Buscar pedido por ID
@@ -136,11 +160,7 @@ router.patch("/:id/cancelar", autenticar, cancelarPedido);
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               codigo:
- *                 type: string
- *                 example: BEMVINDO10
+ *             $ref: '#/components/schemas/PedidoCupom'
  *     responses:
  *       200:
  *         description: Cupom aplicado com sucesso.
@@ -272,22 +292,7 @@ router.patch("/:id/cupom", autenticar, aplicarCupom);
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - cartao
- *             properties:
- *               cartao:
- *                 type: object
- *                 required:
- *                   - tipo
- *                 properties:
- *                   tipo:
- *                     type: string
- *                     enum: [debito, credito]
- *                     example: credito
- *                   parcelas:
- *                     type: integer
- *                     example: 3
+ *             $ref: '#/components/schemas/PedidoCartao'
  *     responses:
  *       200:
  *         description: Pagamento processado com sucesso.
