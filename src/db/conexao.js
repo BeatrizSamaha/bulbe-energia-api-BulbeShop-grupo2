@@ -122,6 +122,14 @@ if (!colunasUsuarios.includes('telefone')) {
   db.exec('ALTER TABLE usuarios ADD COLUMN telefone TEXT;');
   console.log('[DB] Migração: coluna "telefone" adicionada à tabela usuarios.');
 }
+if (!colunasUsuarios.includes('cpf')) {
+  db.exec('ALTER TABLE usuarios ADD COLUMN cpf TEXT;');
+  console.log('[DB] Migração: coluna "cpf" adicionada à tabela usuarios.');
+}
+if (!colunasUsuarios.includes('endereco')) {
+  db.exec('ALTER TABLE usuarios ADD COLUMN endereco TEXT;');
+  console.log('[DB] Migração: coluna "endereco" adicionada à tabela usuarios.');
+}
 
 const colunasPedidos2 = db.pragma('table_info(pedidos)').map((c) => c.name);
 if (!colunasPedidos2.includes('endereco_entrega')) {
